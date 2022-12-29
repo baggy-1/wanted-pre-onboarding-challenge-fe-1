@@ -107,11 +107,15 @@ const Home = () => {
             <div>로딩중...</div>
           ) : (
             todos &&
-            todos.map(({ id, title }) => (
-              <div key={id}>
-                <h3 onClick={onClickTodo(id)}>{title}</h3>
-                <button onClick={onClickDeleteTodo(id)}>삭제</button>
-              </div>
+            (todos.length === 0 ? (
+              <div>Todo가 없습니다.</div>
+            ) : (
+              todos.map(({ id, title }) => (
+                <div key={id}>
+                  <h3 onClick={onClickTodo(id)}>{title}</h3>
+                  <button onClick={onClickDeleteTodo(id)}>삭제</button>
+                </div>
+              ))
             ))
           )}
         </div>
