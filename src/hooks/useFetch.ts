@@ -1,6 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+interface Cache {
+  [key: string]: unknown;
+}
+
+const cache: Cache = {};
+
 const useFetch = <T>(url: string, config: {}) => {
   const [data, setData] = useState<T>();
   const [isLoading, setIsLoading] = useState(true);
@@ -8,6 +14,13 @@ const useFetch = <T>(url: string, config: {}) => {
   const [reFetch, setReFetch] = useState(false);
 
   useEffect(() => {
+    if (!reFetch && cache[url]) {
+      setData(cache[url] as T);
+      setIsLoading(false);
+      setIsError(false);
+      return;
+    }
+
     (async () => {
       try {
         setIsLoading(true);
@@ -18,6 +31,7 @@ const useFetch = <T>(url: string, config: {}) => {
         }: { data: { data: T } } = await axios.get(url, config);
 
         setData(data);
+        cache[url] = data;
       } catch (error) {
         setIsError(true);
         console.error(error);

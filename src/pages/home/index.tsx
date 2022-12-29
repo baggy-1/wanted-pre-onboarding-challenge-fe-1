@@ -1,13 +1,12 @@
 import { FormEvent } from "react";
-import getToken from "@/pages/auth/util/getToken";
 import axios from "axios";
 import useInput from "@/hooks/useInput";
 import { Outlet, useNavigate } from "react-router-dom";
 import useFetch from "@/hooks/useFetch";
-import { Todo } from "@/type";
+import { Todo } from "@/types";
 import styles from "./Home.module.css";
-
-const TODOS_URL = `${import.meta.env.VITE_API_BASE_URL}/todos`;
+import { API_URL, PAGE_PATH } from "@/const";
+import { getToken, join } from "@/util";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -16,7 +15,9 @@ const Home = () => {
     isLoading,
     isError,
     setReFetch,
-  } = useFetch<Todo[]>(TODOS_URL, { headers: { Authorization: getToken() } });
+  } = useFetch<Todo[]>(API_URL.TODO, {
+    headers: { Authorization: getToken() },
+  });
   const {
     value: title,
     onChange: onChangeTitle,
@@ -29,19 +30,19 @@ const Home = () => {
   } = useInput("");
 
   const onClickTodo = (id: string) => () => {
-    navigate(`/todos/${id}`);
+    navigate(`${PAGE_PATH.TODOS}/${id}`);
   };
 
   const onClickDeleteTodo = (id: string) => async () => {
     try {
-      await axios.delete(`${TODOS_URL}/${id}`, {
+      await axios.delete(join(API_URL.TODO, "/", id), {
         headers: {
           Authorization: getToken(),
         },
       });
 
       setReFetch(true);
-      navigate("/");
+      navigate(PAGE_PATH.HOME, { replace: true });
     } catch (error) {
       console.error(error);
     }
@@ -50,13 +51,18 @@ const Home = () => {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if ([title, content].includes("")) {
+      alert("제목과 내용을 모두 입력해주세요.");
+      return;
+    }
+
     try {
       const body = {
         title,
         content,
       };
 
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/todos`, body, {
+      await axios.post(API_URL.TODO, body, {
         headers: {
           Authorization: getToken(),
         },

@@ -2,16 +2,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/home";
 import Login from "@/pages/auth/login";
 import Signup from "@/pages/auth/signup";
-import CheckToken from "@/pages/auth/components/CheckToken";
 import TodoDetail from "@/pages/todos/[id]";
-import Header from "./components/Header";
+import { PAGE_PATH } from "./const";
+import CheckToken from "./components/Auth/CheckToken";
+import Header from "./components/layout/Header";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route
-          path="/"
+          path={PAGE_PATH.HOME}
           element={
             <CheckToken>
               <Header />
@@ -20,7 +21,7 @@ function App() {
           }
         >
           <Route
-            path="todos/:id"
+            path={`${PAGE_PATH.TODOS.slice(1)}/:id`}
             element={
               <CheckToken>
                 <TodoDetail />
@@ -28,8 +29,8 @@ function App() {
             }
           />
         </Route>
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/auth/signup" element={<Signup />} />
+        <Route path={PAGE_PATH.LOGIN} element={<Login />} />
+        <Route path={PAGE_PATH.SIGNUP} element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );

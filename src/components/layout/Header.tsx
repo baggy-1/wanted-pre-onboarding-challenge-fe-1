@@ -1,4 +1,5 @@
-import getToken from "@/pages/auth/util/getToken";
+import { PAGE_PATH } from "@/const";
+import { getToken } from "@/util";
 import { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +10,7 @@ const Header = () => {
   const onClickLogout = () => {
     localStorage.removeItem("token");
     setIsLogin(false);
-    navigate("/auth/login");
+    navigate(PAGE_PATH.LOGIN);
   };
 
   useLayoutEffect(() => {

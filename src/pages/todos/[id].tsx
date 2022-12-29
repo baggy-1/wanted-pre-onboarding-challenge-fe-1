@@ -1,13 +1,12 @@
 import useFetch from "@/hooks/useFetch";
-import { Todo } from "@/type";
+import { Todo } from "@/types";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import getToken from "@/pages/auth/util/getToken";
 import styles from "./TodoDetail.module.css";
 import useInput from "@/hooks/useInput";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import axios from "axios";
-
-const TODO_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/todos`;
+import { getToken, join } from "@/util";
+import { API_URL, PAGE_PATH } from "@/const";
 
 const TodoDetail = () => {
   const { id } = useParams();
@@ -21,7 +20,7 @@ const TodoDetail = () => {
     isLoading,
     isError,
     setReFetch,
-  } = useFetch<Todo>(`${TODO_BASE_URL}/${id}`, {
+  } = useFetch<Todo>(join(API_URL.TODO, "/", id || ""), {
     headers: { Authorization: getToken() },
   });
   const { value: title, onChange: onChangeTitle } = useInput(todo?.title || "");
@@ -34,11 +33,16 @@ const TodoDetail = () => {
   };
 
   const onClickMoveHome = () => {
-    navigate("/");
+    navigate(PAGE_PATH.HOME, { replace: true });
   };
 
   const onSubmitTodoEdit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!id) {
+      alert("유효하지 않은 접근입니다.");
+      return;
+    }
 
     if (title === todo?.title && content === todo?.content) {
       alert("변경된 내용이 없습니다.");
@@ -51,7 +55,7 @@ const TodoDetail = () => {
         content,
       };
 
-      await axios.put(`${TODO_BASE_URL}/${id}`, body, {
+      await axios.put(join(API_URL.TODO, "/", id), body, {
         headers: {
           Authorization: getToken(),
         },
@@ -78,6 +82,7 @@ const TodoDetail = () => {
   return (
     <div className={styles.container}>
       <h1>Todo 상세</h1>
+      <button onClick={onClickMoveHome}>❌</button>
       {isLoading ? (
         <div>로딩중...</div>
       ) : (

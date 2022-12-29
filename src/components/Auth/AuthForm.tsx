@@ -2,7 +2,8 @@ import { FormEvent, useEffect } from "react";
 import useInputWithValid from "@/hooks/useInputWithValid";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import getToken from "@/pages/auth/util/getToken";
+import { API_URL, PAGE_PATH } from "@/const";
+import { getToken } from "@/util";
 
 interface Props {
   type: "login" | "signup";
@@ -16,11 +17,11 @@ interface SuccessResponse {
 const AUTH_TYPE = {
   login: {
     text: "로그인",
-    api: "/users/login",
+    api: API_URL.LOGIN,
   },
   signup: {
     text: "회원가입",
-    api: "/users/create",
+    api: API_URL.SIGNUP,
   },
 };
 
@@ -50,12 +51,9 @@ const AuthForm = ({ type }: Props) => {
       }: {
         [key: string]: unknown;
         data: SuccessResponse;
-      } = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}${AUTH_TYPE[type].api}`,
-        body
-      );
+      } = await axios.post(AUTH_TYPE[type].api, body);
       localStorage.setItem("token", token);
-      navigate("/");
+      navigate(PAGE_PATH.HOME);
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 409) {
@@ -73,7 +71,7 @@ const AuthForm = ({ type }: Props) => {
 
   useEffect(() => {
     if (getToken()) {
-      navigate("/");
+      navigate(PAGE_PATH.HOME);
     }
   }, []);
 

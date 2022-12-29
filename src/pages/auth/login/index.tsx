@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import AuthForm from "@/pages/auth/components/AuthForm";
-import LinkBox from "@/pages/auth/components/LinkBox";
+import { PAGE_PATH } from "@/const";
+import AuthForm from "@/components/Auth/AuthForm";
+import LinkBox from "@/components/common/LinkBox";
 
 const Login = () => {
   return (
@@ -8,7 +9,7 @@ const Login = () => {
       <AuthForm type="login" />
       <LinkBox>
         <span>처음이신가요?</span>
-        <Link to={`/auth/signup`}>회원가입</Link>
+        <Link to={PAGE_PATH.SIGNUP}>회원가입</Link>
       </LinkBox>
     </div>
   );
