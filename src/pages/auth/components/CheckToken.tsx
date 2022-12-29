@@ -3,7 +3,7 @@ import getToken from "@/pages/auth/util/getToken";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 const CheckToken = ({ children }: Props) => {
@@ -16,7 +16,7 @@ const CheckToken = ({ children }: Props) => {
     }
   }, []);
 
-  return children;
+  return <>{children}</>;
 };
 
 export default CheckToken;
