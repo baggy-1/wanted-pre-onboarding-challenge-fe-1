@@ -1,16 +1,10 @@
-import { Link } from "react-router-dom";
-import { PAGE_PATH } from "@/const";
-import AuthForm from "@/components/Auth/AuthForm";
-import LinkBox from "@/components/common/LinkBox";
+import styles from "./Login.module.css";
+import AuthFormBox from "@/components/Auth/AuthFormBox";
 
 const Login = () => {
   return (
-    <div>
-      <AuthForm type="login" />
-      <LinkBox>
-        <span>처음이신가요?</span>
-        <Link to={PAGE_PATH.SIGNUP}>회원가입</Link>
-      </LinkBox>
+    <div className={styles.container}>
+      <AuthFormBox type={"LOGIN"} />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import join from "./join";
-import getToken from "./getToken";
+import getLocalStorageItem from "./getLocalStorageItem";
+import removeLocalStorageItem from "./removeLocalStorageItem";
 
-export { join, getToken };
+export { join, getLocalStorageItem, removeLocalStorageItem };

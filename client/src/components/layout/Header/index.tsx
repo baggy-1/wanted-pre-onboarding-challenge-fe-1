@@ -1,5 +1,6 @@
+import styles from "./Header.module.css";
 import { PAGE_PATH } from "@/const";
-import { getToken } from "@/util";
+import { getLocalStorageItem, removeLocalStorageItem } from "@/util";
 import { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,13 +9,13 @@ const Header = () => {
   const [isLogin, setIsLogin] = useState(false);
 
   const onClickLogout = () => {
-    localStorage.removeItem("token");
+    removeLocalStorageItem("token");
     setIsLogin(false);
     navigate(PAGE_PATH.LOGIN);
   };
 
   useLayoutEffect(() => {
-    if (getToken()) {
+    if (getLocalStorageItem("token")) {
       setIsLogin(true);
       return;
     }
@@ -23,9 +24,15 @@ const Header = () => {
   }, []);
 
   return (
-    <header>
-      <h1>멋진 Todo App</h1>
-      {isLogin && <button onClick={onClickLogout}>로그아웃</button>}
+    <header className={styles.container}>
+      <div className={styles.containerBox}>
+        <h1>멋진 Todo App</h1>
+        {isLogin && (
+          <button className={styles.button} onClick={onClickLogout}>
+            로그아웃
+          </button>
+        )}
+      </div>
     </header>
   );
 };

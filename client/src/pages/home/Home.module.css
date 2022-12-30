@@ -1,15 +1,69 @@
 .container {
   width: 100%;
+  height: calc(100vh - 5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.containerBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  max-width: 60rem;
   height: 100%;
 }
 
 .todoSection {
   display: flex;
+  justify-content: center;
   width: 100%;
 }
 
 .todoBox {
   display: flex;
   flex-direction: column;
+  width: 50%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  max-width: 15rem;
+  height: auto;
+  gap: 1rem;
+}
+
+.inputBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: auto;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 2rem;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e2e2;
+}
+
+.button:hover {
+  background-color: blueviolet;
+  color: #ffffff;
+}
+
+.todoDetailContainer {
+  width: 50%;
 }

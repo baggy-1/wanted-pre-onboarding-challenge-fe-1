@@ -5,7 +5,7 @@ import styles from "./TodoDetail.module.css";
 import useInput from "@/hooks/useInput";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import axios from "axios";
-import { getToken, join } from "@/util";
+import { getLocalStorageItem, join } from "@/util";
 import { API_URL, PAGE_PATH } from "@/const";
 
 const TodoDetail = () => {
@@ -21,14 +21,25 @@ const TodoDetail = () => {
     isError,
     setReFetch,
   } = useFetch<Todo>(join(API_URL.TODO, "/", id || ""), {
-    headers: { Authorization: getToken() },
+    headers: { Authorization: getLocalStorageItem("token") },
   });
-  const { value: title, onChange: onChangeTitle } = useInput(todo?.title || "");
-  const { value: content, onChange: onChangeContent } = useInput(
-    todo?.content || ""
-  );
+  const {
+    value: title,
+    onChange: onChangeTitle,
+    setValue: setTitle,
+  } = useInput(todo?.title || "");
+  const {
+    value: content,
+    onChange: onChangeContent,
+    setValue: setContent,
+  } = useInput(todo?.content || "");
 
   const onClickToggleEdit = () => {
+    if (todo) {
+      const { title, content } = todo;
+      setTitle(title);
+      setContent(content);
+    }
     setIsEdit((prev) => !prev);
   };
 
@@ -57,7 +68,7 @@ const TodoDetail = () => {
 
       await axios.put(join(API_URL.TODO, "/", id), body, {
         headers: {
-          Authorization: getToken(),
+          Authorization: getLocalStorageItem("token"),
         },
       });
 
@@ -82,31 +93,47 @@ const TodoDetail = () => {
   return (
     <div className={styles.container}>
       <h1>Todo 상세</h1>
-      <button onClick={onClickMoveHome}>❌</button>
+      <button className={styles.closeButton} onClick={onClickMoveHome}>
+        ❌
+      </button>
       {isLoading ? (
         <div>로딩중...</div>
       ) : (
-        <form onSubmit={onSubmitTodoEdit}>
-          <label>제목</label>
-          <input
-            type="text"
-            value={title}
-            onChange={onChangeTitle}
-            disabled={!isEdit}
-          />
-          <label>내용</label>
-          <input
-            type="text"
-            value={content}
-            onChange={onChangeContent}
-            disabled={!isEdit}
-          />
-          {!isEdit && <div onClick={onClickToggleEdit}>수정</div>}
-          {isEdit && (
-            <div>
-              <div onClick={onClickToggleEdit}>취소</div>
-              <button type="submit">저장</button>
+        <form className={styles.form} onSubmit={onSubmitTodoEdit}>
+          <div className={styles.inputBox}>
+            <label className={styles.label}>제목</label>
+            <input
+              className={styles.input}
+              type="text"
+              value={title}
+              onChange={onChangeTitle}
+              disabled={!isEdit}
+            />
+          </div>
+          <div className={styles.inputBox}>
+            <label className={styles.label}>내용</label>
+            <input
+              className={styles.input}
+              type="text"
+              value={content}
+              onChange={onChangeContent}
+              disabled={!isEdit}
+            />
+          </div>
+          {!isEdit && (
+            <div className={styles.button} onClick={onClickToggleEdit}>
+              수정
             </div>
+          )}
+          {isEdit && (
+            <>
+              <div className={styles.button} onClick={onClickToggleEdit}>
+                취소
+              </div>
+              <button className={styles.button} type="submit">
+                저장
+              </button>
+            </>
           )}
         </form>
       )}

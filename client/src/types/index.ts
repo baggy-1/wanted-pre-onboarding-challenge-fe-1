@@ -6,4 +6,11 @@ interface Todo {
   updatedAt: string;
 }
 
-export type { Todo };
+type AuthType = "LOGIN" | "SIGNUP";
+
+interface AuthResponse {
+  message: string;
+  token: string;
+}
+
+export type { Todo, AuthType, AuthResponse };

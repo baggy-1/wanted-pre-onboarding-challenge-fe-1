@@ -5,9 +5,13 @@ interface Cache {
   [key: string]: unknown;
 }
 
+interface Config {
+  [key: string]: unknown;
+}
+
 const cache: Cache = {};
 
-const useFetch = <T>(url: string, config: {}) => {
+const useFetch = <T>(url: string, config: Config) => {
   const [data, setData] = useState<T>();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);

@@ -1,10 +1,10 @@
 import { ChangeEvent, useState } from "react";
 
-type ValueType = "email" | "password";
+type ValueType = "EMAIL" | "PASSWORD";
 
 const regExp = {
-  email: /(?=.*@)(?=.*\.).*/,
-  password: /^.{8,}$/,
+  EMAIL: /(?=.*@)(?=.*\.).*/,
+  PASSWORD: /^.{8,}$/,
 };
 
 const isValid = (value: string, type: ValueType) => {

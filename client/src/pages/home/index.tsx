@@ -6,7 +6,7 @@ import useFetch from "@/hooks/useFetch";
 import { Todo } from "@/types";
 import styles from "./Home.module.css";
 import { API_URL, PAGE_PATH } from "@/const";
-import { getToken, join } from "@/util";
+import { getLocalStorageItem, join } from "@/util";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Home = () => {
     isError,
     setReFetch,
   } = useFetch<Todo[]>(API_URL.TODO, {
-    headers: { Authorization: getToken() },
+    headers: { Authorization: getLocalStorageItem("token") },
   });
   const {
     value: title,
@@ -37,7 +37,7 @@ const Home = () => {
     try {
       await axios.delete(join(API_URL.TODO, "/", id), {
         headers: {
-          Authorization: getToken(),
+          Authorization: getLocalStorageItem("token"),
         },
       });
 
@@ -64,7 +64,7 @@ const Home = () => {
 
       await axios.post(API_URL.TODO, body, {
         headers: {
-          Authorization: getToken(),
+          Authorization: getLocalStorageItem("token"),
         },
       });
 
@@ -83,43 +83,51 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <form onSubmit={onSubmit}>
-        <label>제목</label>
-        <input
-          type="text"
-          value={title}
-          onChange={onChangeTitle}
-          placeholder="제목"
-        />
-        <label>내용</label>
-        <input
-          type="text"
-          value={content}
-          onChange={onChangeContent}
-          placeholder="내용"
-        />
-        <button type="submit">Todo 추가</button>
-      </form>
-      <div className={styles.todoSection}>
-        <div className={styles.todoBox}>
-          <h1>Todo 목록</h1>
-          {isLoading ? (
-            <div>로딩중...</div>
-          ) : (
-            todos &&
-            (todos.length === 0 ? (
-              <div>Todo가 없습니다.</div>
+      <div className={styles.containerBox}>
+        <form className={styles.form} onSubmit={onSubmit}>
+          <div className={styles.inputBox}>
+            <label>제목</label>
+            <input
+              type="text"
+              value={title}
+              onChange={onChangeTitle}
+              placeholder="제목"
+            />
+          </div>
+          <div className={styles.inputBox}>
+            <label>내용</label>
+            <input
+              type="text"
+              value={content}
+              onChange={onChangeContent}
+              placeholder="내용"
+            />
+          </div>
+          <button className={styles.button} type="submit">
+            Todo 추가
+          </button>
+        </form>
+        <div className={styles.todoSection}>
+          <div className={styles.todoBox}>
+            <h1>Todo 목록</h1>
+            {isLoading ? (
+              <div>로딩중...</div>
             ) : (
-              todos.map(({ id, title }) => (
-                <div key={id}>
-                  <h3 onClick={onClickTodo(id)}>{title}</h3>
-                  <button onClick={onClickDeleteTodo(id)}>삭제</button>
-                </div>
+              todos &&
+              (todos.length === 0 ? (
+                <div>Todo가 없습니다.</div>
+              ) : (
+                todos.map(({ id, title }) => (
+                  <div key={id}>
+                    <h3 onClick={onClickTodo(id)}>{title}</h3>
+                    <button onClick={onClickDeleteTodo(id)}>삭제</button>
+                  </div>
+                ))
               ))
-            ))
-          )}
+            )}
+          </div>
+          <Outlet context={{ setReFetch }} />
         </div>
-        <Outlet context={{ setReFetch }} />
       </div>
     </div>
   );
