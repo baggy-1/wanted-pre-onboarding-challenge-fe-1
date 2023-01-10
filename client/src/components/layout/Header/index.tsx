@@ -1,15 +1,15 @@
 import styles from "./Header.module.css";
 import { PAGE_PATH } from "@/const";
-import { getLocalStorageItem, removeLocalStorageItem } from "@/util";
 import { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getAuthToken, removeAuthToken } from "@/util/auth";
 
 const Header = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
 
   const onClickLogout = () => {
-    removeLocalStorageItem("token");
+    removeAuthToken();
     setIsLogin(false);
     navigate(PAGE_PATH.LOGIN);
   };
@@ -19,7 +19,7 @@ const Header = () => {
   };
 
   useLayoutEffect(() => {
-    if (getLocalStorageItem("token")) {
+    if (getAuthToken()) {
       setIsLogin(true);
       return;
     }

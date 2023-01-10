@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { AUTH_TYPE, PAGE_PATH } from "@/const";
 import { getLocalStorageItem } from "@/util";
 import { AuthResponse, AuthType } from "@/types";
+import { setAuthToken } from "@/util/auth";
 
 interface Props {
   type: AuthType;
@@ -38,7 +39,7 @@ const AuthForm = ({ type }: Props) => {
         [key: string]: unknown;
         data: AuthResponse;
       } = await axios.post(AUTH_TYPE[type].api, body);
-      localStorage.setItem("token", token);
+      setAuthToken(token);
       navigate(PAGE_PATH.HOME);
     } catch (error) {
       if (error instanceof AxiosError) {
