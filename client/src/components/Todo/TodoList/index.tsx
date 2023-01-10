@@ -1,7 +1,7 @@
 import { API_PATH, PAGE_PATH } from "@/const";
 import useMutationTodo from "@/hooks/useMutationTodo";
 import { Todo } from "@/types";
-import { join } from "@/util";
+import { confirm, join } from "@/util";
 import { useNavigate } from "react-router-dom";
 import styles from "./TodoList.module.css";
 
@@ -19,11 +19,14 @@ const TodoList = ({ todos, refetch }: Props) => {
   };
 
   const onClickDeleteTodo = (id: string) => async () => {
+    if (!confirm("정말 삭제하시겠습니까?")) {
+      return;
+    }
+
     mutateTodo({
       url: join(API_PATH.TODO, "/", id),
       method: "delete",
       body: null,
-      confirmText: "정말 삭제하시겠습니까?",
       onSuccess: () => {
         refetch(true);
         navigate(PAGE_PATH.HOME, { replace: true });

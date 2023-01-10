@@ -4,7 +4,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import styles from "./TodoDetail.module.css";
 import useInput from "@/hooks/useInput";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import { getLocalStorageItem, join } from "@/util";
+import { confirm, getLocalStorageItem, join } from "@/util";
 import { API_PATH, API_URL, PAGE_PATH } from "@/const";
 import useMutationTodo from "@/hooks/useMutationTodo";
 
@@ -69,11 +69,14 @@ const TodoDetail = () => {
       return;
     }
 
+    if (!confirm("정말 수정하시겠습니까?")) {
+      return;
+    }
+
     mutateTodo({
       url: join(API_PATH.TODO, "/", id),
       method: "put",
       body: { title, content },
-      confirmText: "정말 수정하시겠습니까?",
       onSuccess: () => {
         setReFetch(true);
         setTodoListReFetch(true);

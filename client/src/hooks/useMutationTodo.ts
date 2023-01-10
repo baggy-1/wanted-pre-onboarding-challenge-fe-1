@@ -31,7 +31,6 @@ interface mutateTodoParams {
   url: string;
   method: Method;
   body: Body;
-  confirmText: string;
   onSuccess?: (data: ResponseData) => void;
   onError?: (error: unknown) => void;
   onFinally?: () => void;
@@ -42,16 +41,10 @@ const useMutationTodo = () => {
     url,
     method,
     body,
-    confirmText,
     onSuccess,
     onError,
     onFinally,
   }: mutateTodoParams) => {
-    const isConfirm = window.confirm(confirmText);
-    if (!isConfirm) {
-      return;
-    }
-
     try {
       const { data } = await authInstance<ResponseData>({
         method,

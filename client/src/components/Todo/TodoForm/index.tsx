@@ -1,6 +1,7 @@
 import { API_PATH } from "@/const";
 import useInput from "@/hooks/useInput";
 import useMutationTodo from "@/hooks/useMutationTodo";
+import { confirm } from "@/util";
 import { FormEvent } from "react";
 import styles from "./TodoForm.module.css";
 
@@ -38,10 +39,13 @@ const TodoForm = ({ refetch }: Props) => {
       return;
     }
 
+    if (!confirm("Todo를 추가하시겠습니까?")) {
+      return;
+    }
+
     mutateTodo({
       url: API_PATH.TODO,
       method: "post",
-      confirmText: "Todo를 추가하시겠습니까?",
       body: { title, content },
       onSuccess: () => {
         refetch(true);
