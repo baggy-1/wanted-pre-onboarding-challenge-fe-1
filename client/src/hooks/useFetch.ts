@@ -46,6 +46,15 @@ const useFetch = <T>(url: string, config: Config) => {
     })();
   }, [url, reFetch]);
 
+  if (!data || isLoading || isError) {
+    return {
+      data: null,
+      isLoading,
+      isError,
+      setReFetch,
+    };
+  }
+
   return { data, isLoading, isError, setReFetch };
 };
 

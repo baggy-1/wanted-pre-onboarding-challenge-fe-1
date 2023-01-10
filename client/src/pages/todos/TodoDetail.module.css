@@ -2,8 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 50%;
-  animation: slide 0.3s ease-in forwards;
+  width: 100%;
 }
 
 .closeButton {
@@ -75,13 +74,4 @@
 .button:hover {
   background-color: blueviolet;
   color: #ffffff;
-}
-
-@keyframes slide {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: 50%;
-  }
 }

@@ -11,8 +11,8 @@ import { API_URL, PAGE_PATH } from "@/const";
 const TodoDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { setReFetch: setTodoListReFetch } = useOutletContext<{
-    setReFetch: Dispatch<SetStateAction<boolean>>;
+  const { refetch: setTodoListReFetch } = useOutletContext<{
+    refetch: Dispatch<SetStateAction<boolean>>;
   }>();
   const [isEdit, setIsEdit] = useState(false);
   const {
@@ -57,6 +57,11 @@ const TodoDetail = () => {
 
     if (title === todo?.title && content === todo?.content) {
       alert("변경된 내용이 없습니다.");
+      return;
+    }
+
+    const confirm = window.confirm("수정하시겠습니까?");
+    if (!confirm) {
       return;
     }
 

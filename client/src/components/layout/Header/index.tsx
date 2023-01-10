@@ -14,6 +14,10 @@ const Header = () => {
     navigate(PAGE_PATH.LOGIN);
   };
 
+  const onClickMoveHome = () => {
+    navigate(PAGE_PATH.HOME);
+  };
+
   useLayoutEffect(() => {
     if (getLocalStorageItem("token")) {
       setIsLogin(true);
@@ -26,7 +30,9 @@ const Header = () => {
   return (
     <header className={styles.container}>
       <div className={styles.containerBox}>
-        <h1>멋진 Todo App</h1>
+        <h1 className={styles.brandTitle} onClick={onClickMoveHome}>
+          멋진 Todo App
+        </h1>
         {isLogin && (
           <button className={styles.button} onClick={onClickLogout}>
             로그아웃

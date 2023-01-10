@@ -7,7 +7,7 @@ const PAGE_PATH = {
   TODOS: "/todos",
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
 const API_PATH = {
   TODO: "/todos",
@@ -45,4 +45,15 @@ const AUTH_TYPE = {
   },
 };
 
-export { PAGE_PATH, API_URL, AUTH_TYPE, AUTH_FORM_BOX_LINK_FOR_TYPE };
+const LOCALSTORAGE_KEY = {
+  AUTH_TOKEN: "token",
+};
+
+export {
+  PAGE_PATH,
+  API_BASE_URL,
+  API_URL,
+  AUTH_TYPE,
+  AUTH_FORM_BOX_LINK_FOR_TYPE,
+  LOCALSTORAGE_KEY,
+};
