@@ -1,4 +1,4 @@
-import { authInstance } from "@/api/instance";
+import { authInstance } from "@/api/interceptor";
 import { API_URL } from "@/const";
 import { Todo } from "@/types";
 import { useEffect, useState } from "react";

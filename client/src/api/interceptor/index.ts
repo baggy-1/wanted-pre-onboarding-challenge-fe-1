@@ -1,11 +1,19 @@
+import { API_BASE_URL } from "@/const";
 import { getAuthToken } from "@/util/auth";
-import { authInstance } from "../instance";
+import axios from "axios";
+
+const authInstance = axios.create({
+  baseURL: API_BASE_URL,
+});
 
 authInstance.interceptors.request.use(
   (config) => {
-    if (!getAuthToken()) {
+    const authToken = getAuthToken();
+    if (!authToken) {
       return Promise.reject(new Error("인증 토큰이 없습니다."));
     }
+
+    config.headers = { Authorization: authToken };
 
     return config;
   },
@@ -13,3 +21,5 @@ authInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export { authInstance };
