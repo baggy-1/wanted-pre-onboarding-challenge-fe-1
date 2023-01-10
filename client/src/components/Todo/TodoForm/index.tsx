@@ -1,7 +1,5 @@
-import { API_URL } from "@/const";
+import useCreateTodo from "@/hooks/useCreateTodo";
 import useInput from "@/hooks/useInput";
-import { getLocalStorageItem } from "@/util";
-import axios from "axios";
 import { FormEvent } from "react";
 import styles from "./TodoForm.module.css";
 
@@ -20,6 +18,7 @@ const TodoForm = ({ refetch }: Props) => {
     onChange: onChangeContent,
     setValue: setContent,
   } = useInput("");
+  const { createTodo } = useCreateTodo();
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,25 +28,16 @@ const TodoForm = ({ refetch }: Props) => {
       return;
     }
 
-    try {
-      const body = {
-        title,
-        content,
-      };
-
-      await axios.post(API_URL.TODO, body, {
-        headers: {
-          Authorization: getLocalStorageItem("token"),
-        },
-      });
-
-      refetch(true);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setTitle("");
-      setContent("");
-    }
+    createTodo({
+      todoBody: { title, content },
+      onSuccess: () => {
+        refetch(true);
+      },
+      onFinally: () => {
+        setTitle("");
+        setContent("");
+      },
+    });
   };
 
   return (

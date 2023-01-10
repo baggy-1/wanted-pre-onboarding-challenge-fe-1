@@ -1,5 +1,5 @@
 import { authInstance } from "@/api/interceptor";
-import { API_URL } from "@/const";
+import { API_PATH } from "@/const";
 import { Todo } from "@/types";
 import { useEffect, useState } from "react";
 
@@ -8,7 +8,7 @@ interface TodoResponse {
 }
 
 const fetchGetTodos = async () => {
-  return await authInstance.get<TodoResponse>(API_URL.TODO);
+  return await authInstance.get<TodoResponse>(API_PATH.TODO);
 };
 
 const useGetTodos = () => {

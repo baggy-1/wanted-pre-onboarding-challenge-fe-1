@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import styles from "./Home.module.css";
 import TodoForm from "@/components/Todo/TodoForm";
 import TodoList from "@/components/Todo/TodoList";
-import useGetTodos from "@/hooks/useTodos";
+import useGetTodos from "@/hooks/useGetTodos";
 
 const Home = () => {
   const { todos, isLoading, isError, refetch } = useGetTodos();
