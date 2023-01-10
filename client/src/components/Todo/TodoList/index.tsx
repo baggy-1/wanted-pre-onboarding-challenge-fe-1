@@ -1,7 +1,7 @@
-import { API_URL, PAGE_PATH } from "@/const";
+import { API_PATH, PAGE_PATH } from "@/const";
+import useMutationTodo from "@/hooks/useMutationTodo";
 import { Todo } from "@/types";
-import { getLocalStorageItem, join } from "@/util";
-import axios from "axios";
+import { join } from "@/util";
 import { useNavigate } from "react-router-dom";
 import styles from "./TodoList.module.css";
 
@@ -12,29 +12,23 @@ interface Props {
 
 const TodoList = ({ todos, refetch }: Props) => {
   const navigate = useNavigate();
+  const { mutateTodo } = useMutationTodo();
 
   const onClickTodo = (id: string) => () => {
     navigate(`${PAGE_PATH.TODOS}/${id}`);
   };
 
   const onClickDeleteTodo = (id: string) => async () => {
-    const confirm = window.confirm("정말 삭제하시겠습니까?");
-    if (!confirm) {
-      return;
-    }
-
-    try {
-      await axios.delete(join(API_URL.TODO, "/", id), {
-        headers: {
-          Authorization: getLocalStorageItem("token"),
-        },
-      });
-
-      refetch(true);
-      navigate(PAGE_PATH.HOME, { replace: true });
-    } catch (error) {
-      console.error(error);
-    }
+    mutateTodo({
+      url: join(API_PATH.TODO, "/", id),
+      method: "delete",
+      body: null,
+      confirmText: "정말 삭제하시겠습니까?",
+      onSuccess: () => {
+        refetch(true);
+        navigate(PAGE_PATH.HOME, { replace: true });
+      },
+    });
   };
 
   return (

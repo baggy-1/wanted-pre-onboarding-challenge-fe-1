@@ -1,5 +1,6 @@
-import useCreateTodo from "@/hooks/useCreateTodo";
+import { API_PATH } from "@/const";
 import useInput from "@/hooks/useInput";
+import useMutationTodo from "@/hooks/useMutationTodo";
 import { FormEvent } from "react";
 import styles from "./TodoForm.module.css";
 
@@ -18,24 +19,35 @@ const TodoForm = ({ refetch }: Props) => {
     onChange: onChangeContent,
     setValue: setContent,
   } = useInput("");
-  const { createTodo } = useCreateTodo();
+  const { mutateTodo } = useMutationTodo();
+
+  const clearInput = () => {
+    setTitle("");
+    setContent("");
+  };
+
+  const isSomeEmpty = (...values: string[]) => {
+    return values.some((value) => value === "");
+  };
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if ([title, content].includes("")) {
+    if (isSomeEmpty(title, content)) {
       alert("제목과 내용을 모두 입력해주세요.");
       return;
     }
 
-    createTodo({
-      todoBody: { title, content },
+    mutateTodo({
+      url: API_PATH.TODO,
+      method: "post",
+      confirmText: "Todo를 추가하시겠습니까?",
+      body: { title, content },
       onSuccess: () => {
         refetch(true);
       },
       onFinally: () => {
-        setTitle("");
-        setContent("");
+        clearInput();
       },
     });
   };

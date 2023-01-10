@@ -4,9 +4,9 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import styles from "./TodoDetail.module.css";
 import useInput from "@/hooks/useInput";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import axios from "axios";
 import { getLocalStorageItem, join } from "@/util";
-import { API_URL, PAGE_PATH } from "@/const";
+import { API_PATH, API_URL, PAGE_PATH } from "@/const";
+import useMutationTodo from "@/hooks/useMutationTodo";
 
 const TodoDetail = () => {
   const { id } = useParams();
@@ -14,6 +14,7 @@ const TodoDetail = () => {
   const { refetch: setTodoListReFetch } = useOutletContext<{
     refetch: Dispatch<SetStateAction<boolean>>;
   }>();
+  const { mutateTodo } = useMutationTodo();
   const [isEdit, setIsEdit] = useState(false);
   const {
     data: todo,
@@ -47,6 +48,14 @@ const TodoDetail = () => {
     navigate(PAGE_PATH.HOME, { replace: true });
   };
 
+  const isUpdateInputValues = () => {
+    if (!todo) {
+      return false;
+    }
+
+    return title !== todo.title || content !== todo.content;
+  };
+
   const onSubmitTodoEdit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -55,35 +64,24 @@ const TodoDetail = () => {
       return;
     }
 
-    if (title === todo?.title && content === todo?.content) {
+    if (!isUpdateInputValues()) {
       alert("변경된 내용이 없습니다.");
       return;
     }
 
-    const confirm = window.confirm("수정하시겠습니까?");
-    if (!confirm) {
-      return;
-    }
-
-    try {
-      const body = {
-        title,
-        content,
-      };
-
-      await axios.put(join(API_URL.TODO, "/", id), body, {
-        headers: {
-          Authorization: getLocalStorageItem("token"),
-        },
-      });
-
-      setReFetch(true);
-      setTodoListReFetch(true);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsEdit(false);
-    }
+    mutateTodo({
+      url: join(API_PATH.TODO, "/", id),
+      method: "put",
+      body: { title, content },
+      confirmText: "정말 수정하시겠습니까?",
+      onSuccess: () => {
+        setReFetch(true);
+        setTodoListReFetch(true);
+      },
+      onFinally: () => {
+        setIsEdit(false);
+      },
+    });
   };
 
   if (isError) {
@@ -125,12 +123,8 @@ const TodoDetail = () => {
               disabled={!isEdit}
             />
           </div>
-          {!isEdit && (
-            <div className={styles.button} onClick={onClickToggleEdit}>
-              수정
-            </div>
-          )}
-          {isEdit && (
+
+          {isEdit ? (
             <>
               <div className={styles.button} onClick={onClickToggleEdit}>
                 취소
@@ -139,6 +133,10 @@ const TodoDetail = () => {
                 저장
               </button>
             </>
+          ) : (
+            <div className={styles.button} onClick={onClickToggleEdit}>
+              수정
+            </div>
           )}
         </form>
       )}
