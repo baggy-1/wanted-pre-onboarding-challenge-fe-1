@@ -1,18 +1,19 @@
+import { Todo as ITodo } from "@/types";
 import styles from "./TodoList.module.css";
 import Todo from "@/components/Todo/Todo";
 import { API_PATH, PAGE_PATH } from "@/const";
 import { confirm, join } from "@/util";
 import { useNavigate } from "react-router-dom";
-import useGetTodos from "@/hooks/useGetTodos";
 import { useTodosDispatch, useTodosState } from "@/provider/todos";
 import useMutation from "@/hooks/useMutation";
+import useQuery from "@/hooks/useQuery";
 
 const TodoList = () => {
   const navigate = useNavigate();
   const { todos } = useTodosState();
   const dispatch = useTodosDispatch();
   const { mutate } = useMutation();
-  const { isLoading, isError } = useGetTodos({
+  const { isLoading, isError } = useQuery<{ data: ITodo[] }>(API_PATH.TODO, {
     onSuccess: ({ data: todos }) => {
       dispatch({ type: "SET_TODOS", payload: { todos } });
     },
