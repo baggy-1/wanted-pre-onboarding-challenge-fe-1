@@ -6,12 +6,12 @@ import useInput from "@/hooks/useInput";
 import { FormEvent, useState } from "react";
 import { confirm, getLocalStorageItem, join } from "@/util";
 import { API_PATH, API_URL, PAGE_PATH } from "@/const";
-import useMutationTodo from "@/hooks/useMutationTodo";
+import useMutation from "@/hooks/useMutation";
 
 const TodoDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { mutateTodo } = useMutationTodo();
+  const { mutate } = useMutation();
   const [isEdit, setIsEdit] = useState(false);
   const {
     data: todo,
@@ -70,7 +70,7 @@ const TodoDetail = () => {
       return;
     }
 
-    mutateTodo({
+    mutate({
       url: join(API_PATH.TODO, "/", id),
       method: "put",
       body: { title, content },

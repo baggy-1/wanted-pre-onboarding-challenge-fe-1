@@ -1,6 +1,6 @@
 import { API_PATH } from "@/const";
 import useInput from "@/hooks/useInput";
-import useMutationTodo from "@/hooks/useMutationTodo";
+import useMutation from "@/hooks/useMutation";
 import { useTodosDispatch } from "@/provider/todos";
 import { Todo } from "@/types";
 import { confirm } from "@/util";
@@ -10,7 +10,7 @@ import styles from "./TodoForm.module.css";
 const TodoForm = () => {
   const { setValue: setTitle, ...titleInputProps } = useInput("");
   const { setValue: setContent, ...contentInputProps } = useInput("");
-  const { mutateTodo } = useMutationTodo<{ data: Todo }>();
+  const { mutate } = useMutation();
   const dispatch = useTodosDispatch();
 
   const clearInput = () => {
@@ -34,7 +34,7 @@ const TodoForm = () => {
       return;
     }
 
-    mutateTodo({
+    mutate<{ title: string; content: string }, { data: Todo }>({
       url: API_PATH.TODO,
       method: "post",
       body: {

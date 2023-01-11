@@ -1,17 +1,17 @@
 import styles from "./TodoList.module.css";
 import Todo from "@/components/Todo/Todo";
 import { API_PATH, PAGE_PATH } from "@/const";
-import useMutationTodo from "@/hooks/useMutationTodo";
 import { confirm, join } from "@/util";
 import { useNavigate } from "react-router-dom";
 import useGetTodos from "@/hooks/useGetTodos";
 import { useTodosDispatch, useTodosState } from "@/provider/todos";
+import useMutation from "@/hooks/useMutation";
 
 const TodoList = () => {
   const navigate = useNavigate();
   const { todos } = useTodosState();
   const dispatch = useTodosDispatch();
-  const { mutateTodo } = useMutationTodo();
+  const { mutate } = useMutation();
   const { isLoading, isError } = useGetTodos({
     onSuccess: ({ data: todos }) => {
       dispatch({ type: "SET_TODOS", payload: { todos } });
@@ -27,10 +27,9 @@ const TodoList = () => {
       return;
     }
 
-    mutateTodo({
+    mutate({
       url: join(API_PATH.TODO, "/", id),
       method: "delete",
-      body: null,
       onSuccess: () => {
         dispatch({ type: "DELETE_TODO", payload: { id } });
         navigate(PAGE_PATH.HOME, { replace: true });
