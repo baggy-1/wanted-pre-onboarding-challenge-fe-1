@@ -5,7 +5,7 @@ const PAGE_PATH = {
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
   TODOS: "/todos",
-};
+} as const;
 
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
@@ -13,7 +13,7 @@ const API_PATH = {
   TODO: "/todos",
   LOGIN: "/users/login",
   SIGNUP: "/users/create",
-};
+} as const;
 
 const API_URL = {
   TODO: join(API_BASE_URL, API_PATH.TODO),
@@ -21,32 +21,18 @@ const API_URL = {
   SIGNUP: join(API_BASE_URL, API_PATH.SIGNUP),
 };
 
-const AUTH_FORM_BOX_LINK_FOR_TYPE = {
-  LOGIN: {
-    text: "처음이신가요?",
-    link: PAGE_PATH.SIGNUP,
-    value: "회원가입",
-  },
-  SIGNUP: {
-    text: "이미 가입하셨나요?",
-    link: PAGE_PATH.LOGIN,
-    value: "로그인",
-  },
-};
-
 const AUTH_TYPE = {
-  LOGIN: {
-    text: "로그인",
-    api: API_URL.LOGIN,
-  },
-  SIGNUP: {
-    text: "회원가입",
-    api: API_URL.SIGNUP,
-  },
-};
+  LOGIN: "login",
+  SIGNUP: "signup",
+} as const;
 
 const LOCALSTORAGE_KEY = {
   AUTH_TOKEN: "token",
+} as const;
+
+const REGEXP = {
+  EMAIL: /(?=.*@)(?=.*\.).*/,
+  PASSWORD: /^.{8,}$/,
 };
 
 export {
@@ -55,6 +41,6 @@ export {
   API_URL,
   API_PATH,
   AUTH_TYPE,
-  AUTH_FORM_BOX_LINK_FOR_TYPE,
   LOCALSTORAGE_KEY,
+  REGEXP,
 };

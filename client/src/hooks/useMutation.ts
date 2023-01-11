@@ -1,26 +1,28 @@
-import { authInstance } from "@/api/interceptor";
+import axios, { AxiosInstance } from "axios";
 
 type Method = "POST" | "PUT" | "DELETE";
-interface mutateParams<Body, Response> {
+interface mutateParams<T> {
   url: string;
   method: Lowercase<Method>;
-  body?: Body;
-  onSuccess?: (data: Response) => void;
+  body?: unknown;
+  onSuccess?: (data: T) => void;
   onError?: (error: unknown) => void;
   onFinally?: () => void;
 }
 
-const useMutation = () => {
-  const mutate = async <Body, Response>({
+const useMutation = (instance?: AxiosInstance) => {
+  const _instance = instance || axios.create();
+
+  const mutate = async <T>({
     url,
     method,
     body,
     onSuccess,
     onError,
     onFinally,
-  }: mutateParams<Body, Response>) => {
+  }: mutateParams<T>) => {
     try {
-      const { data } = await authInstance<Response>({
+      const { data } = await _instance<T>({
         method,
         data: body,
         url,

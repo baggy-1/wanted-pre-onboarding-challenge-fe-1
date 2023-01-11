@@ -1,25 +1,30 @@
-import { useNavigate, useParams } from "react-router-dom";
 import styles from "./TodoDetail.module.css";
+import { useNavigate, useParams } from "react-router-dom";
 import useInput from "@/hooks/useInput";
 import { FormEvent, useState } from "react";
 import { confirm, join } from "@/util";
 import { API_PATH, PAGE_PATH } from "@/const";
 import useMutation from "@/hooks/useMutation";
 import { useTodosDispatch, useTodosState } from "@/provider/todos";
-import { Todo } from "@/types";
+import { TodoResponse } from "@/types";
+import { authInstance } from "@/api/interceptor";
 
 const TodoDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { mutate } = useMutation();
+  const { mutate } = useMutation(authInstance);
   const [isEdit, setIsEdit] = useState(false);
   const state = useTodosState();
   const dispatch = useTodosDispatch();
   const todo = state.todos.find((todo) => todo.id === id);
-  const { setValue: setTitle, ...titleInputProps } = useInput(todo?.title);
-  const { setValue: setContent, ...contentInputProps } = useInput(
-    todo?.content
-  );
+  const {
+    others: { setValue: setTitle },
+    props: titleProps,
+  } = useInput({ initValue: todo?.title });
+  const {
+    others: { setValue: setContent },
+    props: contentProps,
+  } = useInput({ initValue: todo?.content });
 
   const onClickMoveHome = () => {
     navigate(PAGE_PATH.HOME, { replace: true });
@@ -56,8 +61,7 @@ const TodoDetail = () => {
 
   const isUpdateInputValues = () => {
     return (
-      titleInputProps.value !== todo.title ||
-      contentInputProps.value !== todo.content
+      titleProps.value !== todo.title || contentProps.value !== todo.content
     );
   };
 
@@ -73,10 +77,10 @@ const TodoDetail = () => {
       return;
     }
 
-    mutate<{ title: string; content: string }, { data: Todo }>({
+    mutate<TodoResponse>({
       url: join(API_PATH.TODO, "/", id),
       method: "put",
-      body: { title: titleInputProps.value, content: contentInputProps.value },
+      body: { title: titleProps.value, content: contentProps.value },
       onSuccess: ({ data: todo }) => {
         dispatch({ type: "UPDATE_TODO", payload: { todo } });
       },
@@ -98,7 +102,7 @@ const TodoDetail = () => {
           <input
             className={styles.input}
             type="text"
-            {...titleInputProps}
+            {...titleProps}
             disabled={!isEdit}
           />
         </div>
@@ -107,7 +111,7 @@ const TodoDetail = () => {
           <input
             className={styles.input}
             type="text"
-            {...contentInputProps}
+            {...contentProps}
             disabled={!isEdit}
           />
         </div>

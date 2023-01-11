@@ -22,6 +22,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   type: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }
 
+interface InputWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
 const Form = ({ children, onSubmit }: FormProps) => {
   return (
     <form className={styles.form} onSubmit={onSubmit}>
@@ -30,8 +34,12 @@ const Form = ({ children, onSubmit }: FormProps) => {
   );
 };
 
-const InputWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <div className={styles.inputBox}>{children}</div>;
+const InputWrapper = ({ children, ...otherProps }: InputWrapperProps) => {
+  return (
+    <div className={styles.inputBox} {...otherProps}>
+      {children}
+    </div>
+  );
 };
 
 const Input = ({

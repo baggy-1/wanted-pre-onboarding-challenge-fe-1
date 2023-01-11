@@ -5,12 +5,13 @@ interface Todo {
   createdAt: string;
   updatedAt: string;
 }
-
-type AuthType = "LOGIN" | "SIGNUP";
-
 interface AuthResponse {
   message: string;
   token: string;
 }
 
-export type { Todo, AuthType, AuthResponse };
+interface TodoResponse {
+  data: Todo;
+}
+
+export type { Todo, AuthResponse, TodoResponse };

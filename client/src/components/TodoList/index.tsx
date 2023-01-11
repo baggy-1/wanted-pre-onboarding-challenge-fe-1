@@ -7,12 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { useTodosDispatch, useTodosState } from "@/provider/todos";
 import useMutation from "@/hooks/useMutation";
 import useQuery from "@/hooks/useQuery";
+import { authInstance } from "@/api/interceptor";
 
 const TodoList = () => {
   const navigate = useNavigate();
   const { todos } = useTodosState();
   const dispatch = useTodosDispatch();
-  const { mutate } = useMutation();
+  const { mutate } = useMutation(authInstance);
   const { isLoading, isError } = useQuery<{ data: ITodo[] }>(API_PATH.TODO, {
     onSuccess: ({ data: todos }) => {
       dispatch({ type: "SET_TODOS", payload: { todos } });
