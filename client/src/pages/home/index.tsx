@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import styles from "./Home.module.css";
-import TodoForm from "@/components/Todo/TodoForm";
-import TodoList from "@/components/Todo/TodoList";
+import TodoForm from "@/components/TodoForm";
+import TodoList from "@/components/TodoList";
 import TodosProvider from "@/provider/todos";
 
 const Home = () => {

@@ -5,7 +5,7 @@ import { useTodosDispatch } from "@/provider/todos";
 import { Todo } from "@/types";
 import { confirm } from "@/util";
 import { FormEvent } from "react";
-import styles from "./TodoForm.module.css";
+import Form from "../common/Form";
 
 const TodoForm = () => {
   const { setValue: setTitle, ...titleInputProps } = useInput("");
@@ -51,19 +51,17 @@ const TodoForm = () => {
   };
 
   return (
-    <form className={styles.form} onSubmit={onSubmit}>
-      <div className={styles.inputBox}>
-        <label>제목</label>
-        <input type="text" {...titleInputProps} placeholder="제목" />
-      </div>
-      <div className={styles.inputBox}>
-        <label>내용</label>
-        <input type="text" {...contentInputProps} placeholder="내용" />
-      </div>
-      <button className={styles.button} type="submit">
-        Todo 추가
-      </button>
-    </form>
+    <Form onSubmit={onSubmit}>
+      <Form.InputWrapper>
+        <Form.Label>제목</Form.Label>
+        <Form.Input label="제목" {...titleInputProps}></Form.Input>
+      </Form.InputWrapper>
+      <Form.InputWrapper>
+        <Form.Label>내용</Form.Label>
+        <Form.Input label="내용" {...contentInputProps}></Form.Input>
+      </Form.InputWrapper>
+      <Form.Button type="submit">Todo 추가</Form.Button>
+    </Form>
   );
 };
 

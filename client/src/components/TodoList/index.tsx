@@ -1,6 +1,6 @@
 import { Todo as ITodo } from "@/types";
 import styles from "./TodoList.module.css";
-import Todo from "@/components/Todo/Todo";
+import Todo from "@/components/Todo";
 import { API_PATH, PAGE_PATH } from "@/const";
 import { confirm, join } from "@/util";
 import { useNavigate } from "react-router-dom";

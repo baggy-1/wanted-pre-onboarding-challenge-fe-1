@@ -4,10 +4,6 @@ interface Props {
   children: React.ReactNode;
 }
 
-const Todo = ({ children }: Props) => {
-  return <div className={styles.todoBox}>{children}</div>;
-};
-
 interface ChildrenProps {
   children: React.ReactNode;
 }
@@ -15,6 +11,10 @@ interface ChildrenProps {
 interface OnClickProps {
   onClick: () => void;
 }
+
+const Todo = ({ children }: Props) => {
+  return <div className={styles.todoBox}>{children}</div>;
+};
 
 const Title = ({ children, ...otherProps }: ChildrenProps) => {
   return <div {...otherProps}>{children}</div>;
