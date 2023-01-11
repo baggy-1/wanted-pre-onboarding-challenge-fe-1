@@ -1,18 +1,22 @@
+import styles from "./TodoList.module.css";
+import Todo from "@/components/Todo/Todo";
 import { API_PATH, PAGE_PATH } from "@/const";
 import useMutationTodo from "@/hooks/useMutationTodo";
-import { Todo } from "@/types";
 import { confirm, join } from "@/util";
 import { useNavigate } from "react-router-dom";
-import styles from "./TodoList.module.css";
+import useGetTodos from "@/hooks/useGetTodos";
+import { useTodosDispatch, useTodosState } from "@/provider/todos";
 
-interface Props {
-  todos: Todo[];
-  refetch: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const TodoList = ({ todos, refetch }: Props) => {
+const TodoList = () => {
   const navigate = useNavigate();
+  const { todos } = useTodosState();
+  const dispatch = useTodosDispatch();
   const { mutateTodo } = useMutationTodo();
+  const { isLoading, isError } = useGetTodos({
+    onSuccess: ({ data: todos }) => {
+      dispatch({ type: "SET_TODOS", payload: { todos } });
+    },
+  });
 
   const onClickTodo = (id: string) => () => {
     navigate(`${PAGE_PATH.TODOS}/${id}`);
@@ -28,11 +32,19 @@ const TodoList = ({ todos, refetch }: Props) => {
       method: "delete",
       body: null,
       onSuccess: () => {
-        refetch(true);
+        dispatch({ type: "DELETE_TODO", payload: { id } });
         navigate(PAGE_PATH.HOME, { replace: true });
       },
     });
   };
+
+  if (isLoading) {
+    return <div>멋진 Todo를 가져오는 중...</div>;
+  }
+
+  if (isError || !todos) {
+    return <div>Todo를 가져오는데 실패했습니다.</div>;
+  }
 
   return (
     <div className={styles.todoBox}>
@@ -41,10 +53,12 @@ const TodoList = ({ todos, refetch }: Props) => {
         <div>새로운 TODO를 만들어보세요!</div>
       ) : (
         todos.map(({ id, title }) => (
-          <div key={id}>
-            <h3 onClick={onClickTodo(id)}>{title}</h3>
-            <button onClick={onClickDeleteTodo(id)}>삭제</button>
-          </div>
+          <Todo key={id}>
+            <Todo.Link onClick={onClickTodo(id)}>
+              <Todo.Title>{title}</Todo.Title>
+            </Todo.Link>
+            <Todo.Button onClick={onClickDeleteTodo(id)}>삭제</Todo.Button>
+          </Todo>
         ))
       )}
     </div>

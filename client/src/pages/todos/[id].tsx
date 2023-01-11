@@ -1,9 +1,9 @@
 import useFetch from "@/hooks/useFetch";
 import { Todo } from "@/types";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./TodoDetail.module.css";
 import useInput from "@/hooks/useInput";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { FormEvent, useState } from "react";
 import { confirm, getLocalStorageItem, join } from "@/util";
 import { API_PATH, API_URL, PAGE_PATH } from "@/const";
 import useMutationTodo from "@/hooks/useMutationTodo";
@@ -11,9 +11,6 @@ import useMutationTodo from "@/hooks/useMutationTodo";
 const TodoDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { refetch: setTodoListReFetch } = useOutletContext<{
-    refetch: Dispatch<SetStateAction<boolean>>;
-  }>();
   const { mutateTodo } = useMutationTodo();
   const [isEdit, setIsEdit] = useState(false);
   const {
@@ -79,7 +76,6 @@ const TodoDetail = () => {
       body: { title, content },
       onSuccess: () => {
         setReFetch(true);
-        setTodoListReFetch(true);
       },
       onFinally: () => {
         setIsEdit(false);

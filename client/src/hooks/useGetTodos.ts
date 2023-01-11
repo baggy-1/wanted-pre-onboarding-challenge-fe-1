@@ -7,31 +7,40 @@ interface TodoResponse {
   data: Todo[];
 }
 
+interface Options {
+  onSuccess?: (data: TodoResponse) => void;
+  onError?: (error: unknown) => void;
+  onFinally?: () => void;
+}
+
 const fetchGetTodos = async () => {
   return await authInstance.get<TodoResponse>(API_PATH.TODO);
 };
 
-const useGetTodos = () => {
+const useGetTodos = (options?: Options) => {
   const [todos, setTodos] = useState<Todo[]>();
   const [isError, setisError] = useState(false);
-  const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
     fetchGetTodos()
       .then(({ data: { data: todos } }) => {
         setTodos(todos);
+        options?.onSuccess?.({ data: todos });
       })
       .catch((error) => {
         console.error(error);
         setisError(true);
+        options?.onError?.(error);
+      })
+      .finally(() => {
+        options?.onFinally?.();
       });
-  }, [refetch]);
+  }, []);
 
   return {
     todos,
     isLoading: !isError && !todos,
     isError,
-    refetch: setRefetch,
   };
 };
 

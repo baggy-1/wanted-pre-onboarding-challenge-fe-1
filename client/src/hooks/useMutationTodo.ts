@@ -27,16 +27,16 @@ type ResponseData = data["method"] extends Method
   : never;
 type Body = data["method"] extends Method ? data["requestData"] : never;
 
-interface mutateTodoParams {
+interface mutateTodoParams<T> {
   url: string;
   method: Method;
   body: Body;
-  onSuccess?: (data: ResponseData) => void;
+  onSuccess?: (data: T) => void;
   onError?: (error: unknown) => void;
   onFinally?: () => void;
 }
 
-const useMutationTodo = () => {
+const useMutationTodo = <T>() => {
   const mutateTodo = async ({
     url,
     method,
@@ -44,9 +44,9 @@ const useMutationTodo = () => {
     onSuccess,
     onError,
     onFinally,
-  }: mutateTodoParams) => {
+  }: mutateTodoParams<T>) => {
     try {
-      const { data } = await authInstance<ResponseData>({
+      const { data } = await authInstance<T>({
         method,
         data: body,
         url,
