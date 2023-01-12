@@ -52,10 +52,14 @@ const TodoDetail = () => {
     setIsEdit((prev) => !prev);
   };
 
-  const onClickCancelEdit = () => {
+  const setPrevTodoValues = () => {
     const { title, content } = todo;
     setTitle(title);
     setContent(content);
+  };
+
+  const onClickCancelEdit = () => {
+    setPrevTodoValues();
     onClickToggleEdit();
   };
 

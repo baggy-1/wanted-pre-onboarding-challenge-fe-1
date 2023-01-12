@@ -267,8 +267,8 @@ export default useInput;
 사용 방식
 
 ```typescript
-// LoginForm.tsx
-const LoginForm = () => {
+// SignupForm.tsx
+const SignupForm = () => {
   const {
     others: { isValid: isValidPassword },
     props: passwordProps,
@@ -294,12 +294,16 @@ const LoginForm = () => {
           type="submit"
           disabled={!isValidEmail || !isValidPassword || !isValidPasswordCheck}
         >
-          로그인
+          회원가입
         </Form.Button>
         // ...
   )
+
+  export default SignupForm;
 };
 ```
+
+## components
 
 변경 전 AuthFormBox.tsx, AuthForm.tsx (로그인, 회원가입 컴포넌트)
 
@@ -424,10 +428,10 @@ export default AuthForm;
 변경 후 AuthForm -> LoginForm, SignupForm 분리, AuthFormBox 제거
 
 ```typescript
-// LoginForm.tsx
+// SignupForm.tsx
 
 // 분리의 이유: 만약 회원가입 form에만 추가해야하는 input이 있다면? 을 상상해봤더니 어질어질해서 바로 분리했음
-const LoginForm = () => {
+const SignupForm = () => {
   const navigate = useNavigate();
   const {
     others: { isValid: isValidEmail },
@@ -449,12 +453,12 @@ const LoginForm = () => {
   });
   const { mutate } = useMutation(); // 토큰이 필요없어서 기본 axios.instance 사용
 
-  // 로그인 정보를 서버에 제출하는 함수
+  // 회원가입 정보를 서버에 제출하는 함수
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     mutate<AuthResponse>({
-      url: API_URL.LOGIN, // 어디에
+      url: API_URL.SIGNUP, // 어디에
       method: "post", // 어떤 동작을
       body: {
         // 어떤 정보를
@@ -523,8 +527,72 @@ const LoginForm = () => {
           type="submit"
           disabled={!isValidEmail || !isValidPassword || !isValidPasswordCheck}
         >
-          로그인
+          회원가입
         </Form.Button>
+      </Form>
+      <span>이미 가입하셨나요?</span>
+      <Link to={PAGE_PATH.LOGIN}>로그인</Link>
+    </div>
+  );
+};
+
+export default SignupForm;
+```
+
+SignupForm과 비슷하지만 분명히 다른 UI와 로직
+
+```typescript
+// LoginForm.tsx
+
+const LoginForm = () => {
+  const navigate = useNavigate();
+  const { props: emailProps } = useInput(); // 로그인은 입력 값 검증을 하지 않음
+  const { props: passwordProps } = useInput();
+  const { mutate } = useMutation();
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    mutate<AuthResponse>({
+      url: API_URL.LOGIN,
+      method: "post",
+      body: {
+        email: emailProps.value,
+        password: passwordProps.value,
+      },
+      onSuccess: ({ token }) => {
+        setAuthToken(token);
+        navigate(PAGE_PATH.HOME);
+      },
+      onError: (error) => {
+        if (!(error instanceof AxiosError)) {
+          console.error(error);
+          return;
+        }
+        switch (error.response?.status) {
+          case 409:
+          case 400:
+            alert(error.response.data.details);
+            break;
+          default:
+            console.error(error);
+        }
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (getAuthToken()) {
+      navigate(PAGE_PATH.HOME);
+    }
+  }, []);
+
+  return (
+    <div className="flex flex-col justify-center items-center w-full max-w-[20rem] h-auto p-8 border rounded-lg gap-4 shadow-xl">
+      <Form onSubmit={onSubmit}>
+        <Form.Input type="email" label="이메일" {...emailProps} />
+        <Form.Input type="password" label="비밀번호" {...passwordProps} />
+        <Form.Button type="submit">로그인</Form.Button>
       </Form>
       <span>처음이신가요?</span>
       <Link to={PAGE_PATH.SIGNUP}>회원가입</Link>
