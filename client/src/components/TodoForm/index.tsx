@@ -29,7 +29,7 @@ const TodoForm = () => {
     return values.some((value) => value === "");
   };
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (isSomeEmpty(titleProps.value, contentProps.value)) {

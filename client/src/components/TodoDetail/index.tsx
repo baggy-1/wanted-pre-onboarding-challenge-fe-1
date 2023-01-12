@@ -69,7 +69,7 @@ const TodoDetail = () => {
     );
   };
 
-  const onSubmitTodoEdit = async (event: FormEvent<HTMLFormElement>) => {
+  const onSubmitTodoEdit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!isUpdateInputValues()) {

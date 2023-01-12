@@ -1,6 +1,7 @@
 # 🔒 로그인 기능이 있는 Todo App
 
-# 🪓 1️회차 리팩토링
+<details>
+<summary># 🪓 1️회차 리팩토링</summary>
 
 ## 폴더 구조
 
@@ -454,7 +455,7 @@ const SignupForm = () => {
   const { mutate } = useMutation(); // 토큰이 필요없어서 기본 axios.instance 사용
 
   // 회원가입 정보를 서버에 제출하는 함수
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     mutate<AuthResponse>({
@@ -550,7 +551,7 @@ const LoginForm = () => {
   const { props: passwordProps } = useInput();
   const { mutate } = useMutation();
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     mutate<AuthResponse>({
@@ -602,3 +603,5 @@ const LoginForm = () => {
 
 export default LoginForm;
 ```
+
+</details>

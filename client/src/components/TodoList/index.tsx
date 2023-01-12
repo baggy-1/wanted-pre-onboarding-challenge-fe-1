@@ -19,10 +19,6 @@ const TodoList = () => {
     },
   });
 
-  const onClickTodo = (id: string) => () => {
-    navigate(`${PAGE_PATH.TODOS}/${id}`);
-  };
-
   const onClickDeleteTodo = (id: string) => async () => {
     if (!confirm("정말 삭제하시겠습니까?")) {
       return;
@@ -48,10 +44,10 @@ const TodoList = () => {
 
   return (
     <div className="w-full h-full overflow-hidden">
-      <div className="w-full h-auto p-4 text-2xl font-bold text-center border-b-2">
+      <div className="w-full h-20 p-4 text-2xl font-bold text-center border-b-2">
         Todo 목록
       </div>
-      <div className="w-full h-full overflow-auto">
+      <div className="w-full h-[calc(100%-5rem)] overflow-auto">
         {todos.length === 0 ? (
           <div className="w-full h-auto p-4 font-bold text-center">
             새로운 TODO를 만들어보세요!
@@ -59,7 +55,7 @@ const TodoList = () => {
         ) : (
           todos.map(({ id, title }) => (
             <Todo key={id}>
-              <Todo.Link onClick={onClickTodo(id)}>
+              <Todo.Link href={join(PAGE_PATH.TODOS, "/", id)}>
                 <Todo.Title>{title}</Todo.Title>
               </Todo.Link>
               <Todo.Button onClick={onClickDeleteTodo(id)}>❌</Todo.Button>

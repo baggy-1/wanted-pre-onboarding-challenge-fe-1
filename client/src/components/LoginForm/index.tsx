@@ -14,7 +14,7 @@ const LoginForm = () => {
   const { props: passwordProps } = useInput();
   const { mutate } = useMutation();
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     mutate<AuthResponse>({

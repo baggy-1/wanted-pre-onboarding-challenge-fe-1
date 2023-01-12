@@ -30,7 +30,7 @@ const SignupForm = () => {
   });
   const { mutate } = useMutation();
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     mutate<AuthResponse>({

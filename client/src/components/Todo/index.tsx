@@ -1,13 +1,22 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
 interface Props {
   children: React.ReactNode;
 }
 
-interface ChildrenProps {
+interface TitleProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-interface OnClickProps {
-  onClick: () => void;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+interface LinkProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  href: string;
 }
 
 const Todo = ({ children }: Props) => {
@@ -18,7 +27,7 @@ const Todo = ({ children }: Props) => {
   );
 };
 
-const Title = ({ children, ...otherProps }: ChildrenProps) => {
+const Title = ({ children, ...otherProps }: TitleProps) => {
   return (
     <div
       className="h-auto overflow-hidden break-all w-36 whitespace-nowrap text-ellipsis"
@@ -29,11 +38,7 @@ const Title = ({ children, ...otherProps }: ChildrenProps) => {
   );
 };
 
-const Button = ({
-  children,
-  onClick,
-  ...otherProps
-}: ChildrenProps & OnClickProps) => {
+const Button = ({ children, onClick, ...otherProps }: ButtonProps) => {
   return (
     <button className="rounded-full" onClick={onClick} {...otherProps}>
       {children}
@@ -41,13 +46,18 @@ const Button = ({
   );
 };
 
-const Link = ({
-  children,
-  onClick,
-  ...otherProps
-}: ChildrenProps & OnClickProps) => {
+const Link = ({ children, href, ...otherProps }: LinkProps) => {
+  const navigate = useNavigate();
+  const onClickMoveHref = (href: string) => () => {
+    navigate(href);
+  };
+
   return (
-    <div className="cursor-pointer" onClick={onClick} {...otherProps}>
+    <div
+      className="cursor-pointer"
+      onClick={onClickMoveHref(href)}
+      {...otherProps}
+    >
       {children}
     </div>
   );
