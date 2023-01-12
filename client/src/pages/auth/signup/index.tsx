@@ -1,10 +1,10 @@
 import SignupForm from "@/components/SignupForm";
 
-const Signup = () => {
+const SignupPage = () => {
   return (
     <div className="flex items-center justify-center w-full h-screen">
       <SignupForm />
     </div>
   );
 };
-export default Signup;
+export default SignupPage;

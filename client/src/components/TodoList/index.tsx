@@ -1,4 +1,4 @@
-import { Todo as ITodo } from "@/types";
+import { TodosResponse } from "@/types";
 import Todo from "@/components/Todo";
 import { API_PATH, PAGE_PATH } from "@/const";
 import { confirm, join } from "@/util";
@@ -13,7 +13,7 @@ const TodoList = () => {
   const { todos } = useTodosState();
   const dispatch = useTodosDispatch();
   const { mutate } = useMutation(authInstance);
-  const { isLoading, isError } = useQuery<{ data: ITodo[] }>(API_PATH.TODO, {
+  const { isLoading, isError } = useQuery<TodosResponse>(API_PATH.TODO, {
     onSuccess: ({ data: todos }) => {
       dispatch({ type: "SET_TODOS", payload: { todos } });
     },
@@ -51,7 +51,7 @@ const TodoList = () => {
       <div className="w-full h-auto p-4 text-2xl font-bold text-center border-b-2">
         Todo 목록
       </div>
-      <div className="w-full h-full overflow-scroll">
+      <div className="w-full h-full overflow-auto">
         {todos.length === 0 ? (
           <div className="w-full h-auto p-4 font-bold text-center">
             새로운 TODO를 만들어보세요!

@@ -65,7 +65,7 @@ const Button = ({ children, className, type, ...otherProps }: ButtonProps) => {
     <button
       className={
         className ||
-        "flex items-center justify-center w-full h-8 border rounded-lg cursor-pointer"
+        "flex items-center justify-center w-full h-8 border rounded-lg cursor-pointer disabled:bg-white bg-blue-500 text-white disabled:text-black disabled:cursor-not-allowed"
       }
       type={type}
       {...otherProps}

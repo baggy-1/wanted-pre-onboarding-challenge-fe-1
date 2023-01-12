@@ -11,7 +11,10 @@ const getData = async <T>(url: string) => {
   return await authInstance.get<T>(url);
 };
 
-const useQuery = <T>(url: string, options?: Options<T>) => {
+const useQuery = <T>(
+  url: string,
+  { onSuccess, onError, onFinally }: Options<T> = {}
+) => {
   const [data, setData] = useState<T>();
   const [isError, setisError] = useState(false);
 
@@ -19,15 +22,15 @@ const useQuery = <T>(url: string, options?: Options<T>) => {
     getData<T>(url)
       .then(({ data }) => {
         setData(data);
-        options?.onSuccess?.(data);
+        onSuccess?.(data);
       })
       .catch((error) => {
         console.error(error);
         setisError(true);
-        options?.onError?.(error);
+        onError?.(error);
       })
       .finally(() => {
-        options?.onFinally?.();
+        onFinally?.();
       });
   }, []);
 

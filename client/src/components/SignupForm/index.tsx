@@ -53,11 +53,18 @@ const SignupForm = () => {
           case 409:
           case 400:
             alert(error.response.data.details);
+            break;
           default:
             console.error(error);
         }
       },
     });
+  };
+
+  const isShowNotice = {
+    email: !isValidEmail && emailProps.value !== "",
+    password: !isValidPassword && passwordProps.value !== "",
+    passwordCheck: !isValidPasswordCheck && passwordCheckProps.value !== "",
   };
 
   useEffect(() => {
@@ -71,15 +78,11 @@ const SignupForm = () => {
       <Form onSubmit={onSubmit}>
         <Form.Input type="email" label="이메일" {...emailProps} />
         <Form.Notice>
-          {!isValidEmail && emailProps.value !== ""
-            ? "이메일 형식에 맞춰주세요."
-            : ""}
+          {isShowNotice.email ? "이메일 형식에 맞춰주세요." : ""}
         </Form.Notice>
         <Form.Input type="password" label="비밀번호" {...passwordProps} />
         <Form.Notice>
-          {!isValidPassword && passwordProps.value !== ""
-            ? "비밀번호는 8자 이상입니다."
-            : ""}
+          {isShowNotice.password ? "비밀번호는 8자 이상입니다." : ""}
         </Form.Notice>
         <Form.Input
           type="password"
@@ -87,9 +90,7 @@ const SignupForm = () => {
           {...passwordCheckProps}
         />
         <Form.Notice>
-          {!isValidPasswordCheck && passwordCheckProps.value !== ""
-            ? "비밀번호를 확인해주세요."
-            : ""}
+          {isShowNotice.passwordCheck ? "비밀번호를 확인해주세요." : ""}
         </Form.Notice>
         <Form.Button
           type="submit"

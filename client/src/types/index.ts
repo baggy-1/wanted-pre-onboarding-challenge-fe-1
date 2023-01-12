@@ -14,4 +14,8 @@ interface TodoResponse {
   data: Todo;
 }
 
-export type { Todo, AuthResponse, TodoResponse };
+interface TodosResponse {
+  data: Todo[];
+}
+
+export type { Todo, AuthResponse, TodoResponse, TodosResponse };

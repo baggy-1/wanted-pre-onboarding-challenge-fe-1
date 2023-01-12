@@ -3,7 +3,7 @@ import TodoForm from "@/components/TodoForm";
 import TodoList from "@/components/TodoList";
 import TodosProvider from "@/provider/todos";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <TodosProvider>
       <div className="flex flex-col items-center justify-center w-full h-[calc(100vh-5rem)]">
@@ -25,4 +25,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
