@@ -1,4 +1,3 @@
-import styles from "./Header.module.css";
 import { PAGE_PATH } from "@/const";
 import { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -28,13 +27,19 @@ const Header = () => {
   }, []);
 
   return (
-    <header className={styles.container}>
-      <div className={styles.containerBox}>
-        <h1 className={styles.brandTitle} onClick={onClickMoveHome}>
+    <header className="flex justify-center items-center w-full h-[5rem] sticky top-0 left-0 bg-white z-50">
+      <div className="flex items-center justify-between w-full max-w-[60rem] h-full">
+        <h1
+          className="text-2xl font-bold rounded cursor-pointer"
+          onClick={onClickMoveHome}
+        >
           멋진 Todo App
         </h1>
         {isLogin && (
-          <button className={styles.button} onClick={onClickLogout}>
+          <button
+            className="w-24 h-8 text-center rounded shadow-md cursor-pointer hover:text-white hover:bg-blue-500"
+            onClick={onClickLogout}
+          >
             로그아웃
           </button>
         )}

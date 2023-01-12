@@ -1,4 +1,3 @@
-import styles from "./TodoDetail.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import useInput from "@/hooks/useInput";
 import { FormEvent, useState } from "react";
@@ -8,6 +7,7 @@ import useMutation from "@/hooks/useMutation";
 import { useTodosDispatch, useTodosState } from "@/provider/todos";
 import { TodoResponse } from "@/types";
 import { authInstance } from "@/api/interceptor";
+import Form from "@/components/common/Form";
 
 const TodoDetail = () => {
   const { id } = useParams();
@@ -91,45 +91,66 @@ const TodoDetail = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>Todo 상세</h1>
-      <button className={styles.closeButton} onClick={onClickMoveHome}>
+    <div className="relative flex flex-col items-center justify-start w-full h-full">
+      <div className="w-full h-auto p-4 text-2xl font-bold text-center border-b-2">
+        Todo 상세
+      </div>
+      <button
+        className="absolute top-0 right-0 p-2 text-2xl font-bold text-red-500"
+        onClick={onClickMoveHome}
+      >
         ❌
       </button>
-      <form className={styles.form} onSubmit={onSubmitTodoEdit}>
-        <div className={styles.inputBox}>
-          <label className={styles.label}>제목</label>
-          <input
-            className={styles.input}
+      <Form
+        className="flex flex-col items-center justify-start w-full h-full gap-8 p-4"
+        onSubmit={onSubmitTodoEdit}
+      >
+        <div className="flex items-center justify-center w-full h-auto gap-4">
+          <Form.Label className="text-xl font-bold">제목</Form.Label>
+          <Form.Input
+            className="w-4/5 h-8 p-2 text-xl border rounded-lg"
             type="text"
+            label="제목"
             {...titleProps}
             disabled={!isEdit}
           />
         </div>
-        <div className={styles.inputBox}>
-          <label className={styles.label}>내용</label>
-          <input
-            className={styles.input}
+        <div className="flex items-center justify-center w-full h-auto gap-4">
+          <Form.Label className="text-xl font-bold">내용</Form.Label>
+          <Form.Input
+            className="w-4/5 h-32 p-2 text-xl border rounded-lg"
             type="text"
+            label="내용"
             {...contentProps}
             disabled={!isEdit}
           />
         </div>
         {isEdit ? (
-          <>
-            <div className={styles.button} onClick={onClickCancelEdit}>
+          <div className="flex gap-4">
+            <Form.Button
+              className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
+              type="button"
+              onClick={onClickCancelEdit}
+            >
               취소
-            </div>
-            <button className={styles.button} type="submit">
+            </Form.Button>
+            <Form.Button
+              className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
+              type="submit"
+            >
               저장
-            </button>
-          </>
-        ) : (
-          <div className={styles.button} onClick={onClickToggleEdit}>
-            수정
+            </Form.Button>
           </div>
+        ) : (
+          <Form.Button
+            className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
+            type="button"
+            onClick={onClickToggleEdit}
+          >
+            수정
+          </Form.Button>
         )}
-      </form>
+      </Form>
     </div>
   );
 };

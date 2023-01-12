@@ -1,4 +1,3 @@
-import styles from "./Form.module.css";
 import React from "react";
 
 interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
@@ -22,50 +21,76 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   type: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }
 
-interface InputWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
+interface NoticeProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-const Form = ({ children, onSubmit }: FormProps) => {
+const Form = ({ children, onSubmit, className }: FormProps) => {
   return (
-    <form className={styles.form} onSubmit={onSubmit}>
+    <form
+      className={
+        className ||
+        "flex flex-col justify-center items-center w-full max-w-[15rem] h-auto gap-2"
+      }
+      onSubmit={onSubmit}
+    >
       {children}
     </form>
   );
 };
 
-const InputWrapper = ({ children, ...otherProps }: InputWrapperProps) => {
-  return (
-    <div className={styles.inputBox} {...otherProps}>
-      {children}
-    </div>
-  );
-};
-
 const Input = ({
   children,
+  className,
   type,
   label: placeholder,
   ...otherProps
 }: InputProps) => {
-  return <input type={type} placeholder={placeholder} {...otherProps} />;
+  return (
+    <input
+      className={className || "w-full border rounded-sm min-h-[1rem]"}
+      type={type}
+      placeholder={placeholder}
+      {...otherProps}
+    />
+  );
 };
 
 const Label = ({ children, ...otherProps }: LabelProps) => {
   return <label {...otherProps}>{children}</label>;
 };
 
-const Button = ({ children, type, ...otherProps }: ButtonProps) => {
+const Button = ({ children, className, type, ...otherProps }: ButtonProps) => {
   return (
-    <button type={type} {...otherProps}>
+    <button
+      className={
+        className ||
+        "flex items-center justify-center w-full h-8 border rounded-lg cursor-pointer"
+      }
+      type={type}
+      {...otherProps}
+    >
       {children}
     </button>
   );
 };
 
-Form.InputWrapper = InputWrapper;
+const Notice = ({ children, className, ...otherProps }: NoticeProps) => {
+  return (
+    <div
+      className={
+        className || "w-full h-auto min-h-[1rem] text-xs text-red-500 font-bold"
+      }
+      {...otherProps}
+    >
+      {children}
+    </div>
+  );
+};
+
 Form.Input = Input;
 Form.Label = Label;
 Form.Button = Button;
+Form.Notice = Notice;
 
 export default Form;

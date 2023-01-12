@@ -1,5 +1,3 @@
-import styles from "./Todo.module.css";
-
 interface Props {
   children: React.ReactNode;
 }
@@ -13,11 +11,22 @@ interface OnClickProps {
 }
 
 const Todo = ({ children }: Props) => {
-  return <div className={styles.todoBox}>{children}</div>;
+  return (
+    <div className="relative flex items-center justify-between w-full h-12 p-2 border-t border-b hover:bg-blue-500 hover:text-white">
+      {children}
+    </div>
+  );
 };
 
 const Title = ({ children, ...otherProps }: ChildrenProps) => {
-  return <div {...otherProps}>{children}</div>;
+  return (
+    <div
+      className="h-auto overflow-hidden break-all w-36 whitespace-nowrap text-ellipsis"
+      {...otherProps}
+    >
+      {children}
+    </div>
+  );
 };
 
 const Button = ({
@@ -26,7 +35,7 @@ const Button = ({
   ...otherProps
 }: ChildrenProps & OnClickProps) => {
   return (
-    <button onClick={onClick} {...otherProps}>
+    <button className="rounded-full" onClick={onClick} {...otherProps}>
       {children}
     </button>
   );
@@ -38,7 +47,7 @@ const Link = ({
   ...otherProps
 }: ChildrenProps & OnClickProps) => {
   return (
-    <div onClick={onClick} {...otherProps}>
+    <div className="cursor-pointer" onClick={onClick} {...otherProps}>
       {children}
     </div>
   );

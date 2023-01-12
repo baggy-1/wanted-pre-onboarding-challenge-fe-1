@@ -31,7 +31,7 @@ const LOCALSTORAGE_KEY = {
 } as const;
 
 const REGEXP = {
-  EMAIL: /(?=.*@)(?=.*\.).*/,
+  EMAIL: /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/,
   PASSWORD: /^.{8,}$/,
 };
 

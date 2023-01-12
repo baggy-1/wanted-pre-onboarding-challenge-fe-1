@@ -5,7 +5,7 @@ import Signup from "@/pages/auth/signup";
 import TodoDetail from "@/pages/todos/[id]";
 import { PAGE_PATH } from "./const";
 import CheckToken from "./components/Auth/CheckToken";
-import Header from "./components/layout/Header";
+import Header from "./components/Layout/Header";
 
 function App() {
   return (

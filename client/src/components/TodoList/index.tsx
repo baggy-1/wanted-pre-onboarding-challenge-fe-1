@@ -1,5 +1,4 @@
 import { Todo as ITodo } from "@/types";
-import styles from "./TodoList.module.css";
 import Todo from "@/components/Todo";
 import { API_PATH, PAGE_PATH } from "@/const";
 import { confirm, join } from "@/util";
@@ -48,20 +47,26 @@ const TodoList = () => {
   }
 
   return (
-    <div className={styles.todoBox}>
-      <h1>Todo 목록</h1>
-      {todos.length === 0 ? (
-        <div>새로운 TODO를 만들어보세요!</div>
-      ) : (
-        todos.map(({ id, title }) => (
-          <Todo key={id}>
-            <Todo.Link onClick={onClickTodo(id)}>
-              <Todo.Title>{title}</Todo.Title>
-            </Todo.Link>
-            <Todo.Button onClick={onClickDeleteTodo(id)}>삭제</Todo.Button>
-          </Todo>
-        ))
-      )}
+    <div className="w-full h-full overflow-hidden">
+      <div className="w-full h-auto p-4 text-2xl font-bold text-center border-b-2">
+        Todo 목록
+      </div>
+      <div className="w-full h-full overflow-scroll">
+        {todos.length === 0 ? (
+          <div className="w-full h-auto p-4 font-bold text-center">
+            새로운 TODO를 만들어보세요!
+          </div>
+        ) : (
+          todos.map(({ id, title }) => (
+            <Todo key={id}>
+              <Todo.Link onClick={onClickTodo(id)}>
+                <Todo.Title>{title}</Todo.Title>
+              </Todo.Link>
+              <Todo.Button onClick={onClickDeleteTodo(id)}>❌</Todo.Button>
+            </Todo>
+          ))
+        )}
+      </div>
     </div>
   );
 };
