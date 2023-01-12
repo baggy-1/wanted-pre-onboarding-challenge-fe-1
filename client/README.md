@@ -1,7 +1,7 @@
 # 🔒 로그인 기능이 있는 Todo App
 
 <details>
-<summary># 🪓 1️회차 리팩토링</summary>
+<summary>🪓 1️회차 리팩토링</summary>
 
 ## 폴더 구조
 
