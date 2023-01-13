@@ -1,10 +1,6 @@
-import SignupForm from "@/components/SignupForm";
+import SignUpView from "@/components/views/SignUp";
 
 const SignupPage = () => {
-  return (
-    <div className="flex items-center justify-center w-full h-screen">
-      <SignupForm />
-    </div>
-  );
+  return <SignUpView />;
 };
 export default SignupPage;

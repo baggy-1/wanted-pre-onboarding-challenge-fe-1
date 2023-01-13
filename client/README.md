@@ -605,3 +605,39 @@ export default LoginForm;
 ```
 
 </details>
+
+<details>
+<summary>🪓 2회차 리팩토링</summary>
+
+## 폴더구조
+
+```shell
+└── src
+    ├── components
+    │    ├── common -> 특정 view에 종속되지 않는 UI 컴포넌트
+    │    │   └── hooks -> 컴포넌트에 필요한 hooks
+    │    └── views -> 특정 view에 적용되는 컴포넌트
+    │        └── [view]
+    │            ├── hooks
+    │            └── [component] -> view 컴포넌트에 필요한 컴포넌트
+    ├── constants -> 공통 상수(ex. token)
+    ├── pages
+    │    └── [page] -> view를 불러오고 배치하는 페이지 단위
+    │        ├── index.tsx
+    │        └── [dynamic].tsx -> 동적 라우트 페이지
+    ├── provider -> 공유하고자 하는 상태 provider들
+    ├── services -> 서비스 관련
+    │    ├── @api -> instance 생성 관련
+    │    └── [service]
+    │        └── index.ts -> 서비스의 api 호출 정의
+    ├── types
+    │    ├── common.ts -> 공통 타입
+    │    └── [service].ts -> 서비스 별 타입
+    └── util
+        ├── hooks
+        │    └── index.ts -> 유틸리티 훅
+        └── [util].ts -> 유틸리티 함수
+
+```
+
+</details>

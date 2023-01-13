@@ -1,11 +1,7 @@
-import TodoDetail from "@/components/TodoDetail";
+import TodoDetailView from "@/components/views/TodoDetail";
 
-const TodosPage = () => {
-  return (
-    <>
-      <TodoDetail />
-    </>
-  );
+const TodoDetail = () => {
+  return <TodoDetailView />;
 };
 
-export default TodosPage;
+export default TodoDetail;
