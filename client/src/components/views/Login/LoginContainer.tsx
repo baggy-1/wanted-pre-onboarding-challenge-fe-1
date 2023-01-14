@@ -4,10 +4,9 @@ import Form from "@/components/common/Form";
 import useInput from "@/utils/hooks/useInput";
 import useMutation from "@/utils/hooks/useMutation";
 import { setAuthToken } from "@/utils";
-import { AxiosError } from "axios";
 import { useAuth } from "@/providers/auth";
 import { AuthParmas } from "@/types/auth";
-import { userLogin } from "@/services/auth";
+import { handleAuthError, userLogin } from "@/services/auth";
 
 const LoginContainer = () => {
   const navigate = useNavigate();
@@ -21,20 +20,7 @@ const LoginContainer = () => {
         navigate(PAGE_PATH.HOME);
       });
     },
-    onError: (error) => {
-      if (!(error instanceof AxiosError)) {
-        console.error(error);
-        return;
-      }
-      switch (error.response?.status) {
-        case 409:
-        case 400:
-          alert(error.response.data.details);
-          break;
-        default:
-          console.error(error);
-      }
-    },
+    onError: handleAuthError,
   });
   const { login } = useAuth();
 

@@ -3,10 +3,9 @@ import { PAGE_PATH, REGEXP } from "@/constants";
 import useInput from "@/utils/hooks/useInput";
 import useMutation from "@/utils/hooks/useMutation";
 import { setAuthToken } from "@/utils";
-import { AxiosError } from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/auth";
-import { userLogin } from "@/services/auth";
+import { handleAuthError, userLogin } from "@/services/auth";
 import { AuthParmas } from "@/types/auth";
 
 const SignUpContainer = () => {
@@ -37,20 +36,7 @@ const SignUpContainer = () => {
         navigate(PAGE_PATH.HOME);
       });
     },
-    onError: (error) => {
-      if (!(error instanceof AxiosError)) {
-        console.error(error);
-        return;
-      }
-      switch (error.response?.status) {
-        case 409:
-        case 400:
-          alert(error.response.data.details);
-          break;
-        default:
-          console.error(error);
-      }
-    },
+    onError: handleAuthError,
   });
   const { login } = useAuth();
 
