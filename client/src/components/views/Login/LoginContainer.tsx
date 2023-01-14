@@ -1,5 +1,5 @@
 import { PAGE_PATH } from "@/constants";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Form from "@/components/common/Form";
 import useInput from "@/utils/hooks/useInput";
 import useMutation from "@/utils/hooks/useMutation";
@@ -9,20 +9,17 @@ import { AuthParmas } from "@/types/auth";
 import { handleAuthError, userLogin } from "@/services/auth";
 
 const LoginContainer = () => {
-  const navigate = useNavigate();
   const { props: emailProps } = useInput();
   const { props: passwordProps } = useInput();
+  const { login } = useAuth();
   const { mutate } = useMutation({
     mutationFn: (params: AuthParmas) => userLogin(params),
     onSuccess: ({ token }) => {
       setAuthToken(token);
-      login(() => {
-        navigate(PAGE_PATH.HOME);
-      });
+      login();
     },
     onError: handleAuthError,
   });
-  const { login } = useAuth();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

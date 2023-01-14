@@ -1,6 +1,11 @@
 import { API_PATH } from "@/constants";
 import { createApi } from "@/services/api";
-import { TodoParmas, TodoResponse, TodosResponse } from "@/types/todos";
+import {
+  TodoParmas,
+  TodoResponse,
+  TodosResponse,
+  UpdateTodoParams,
+} from "@/types/todos";
 import { join } from "@/utils";
 
 export const getTodos = () => {
@@ -13,7 +18,7 @@ export const addTodo = (params: TodoParmas) => {
   return api.post<TodoResponse>(API_PATH.TODO, params);
 };
 
-export const updateTodo = ({ id, ...params }: TodoParmas & { id: string }) => {
+export const updateTodo = ({ id, ...params }: UpdateTodoParams) => {
   const api = createApi();
   return api.put<TodoResponse>(join(API_PATH.TODO, "/", id), params);
 };
