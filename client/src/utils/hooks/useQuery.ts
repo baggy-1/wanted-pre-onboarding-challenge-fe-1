@@ -1,8 +1,7 @@
-import { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 
 interface Options<T> {
-  queryFn: () => Promise<AxiosResponse<T>>;
+  queryFn: () => Promise<T>;
   onSuccess?: (data: T) => void;
   onError?: (error: unknown) => void;
   onFinally?: () => void;
@@ -19,7 +18,7 @@ const useQuery = <T>({
 
   useEffect(() => {
     queryFn()
-      .then(({ data }) => {
+      .then((data) => {
         setData(data);
         setisError(false);
         onSuccess?.(data);

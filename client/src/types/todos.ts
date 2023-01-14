@@ -5,13 +5,8 @@ export interface Todo {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface TodoResponse {
-  data: Todo;
-}
-
-export interface TodosResponse {
-  data: Todo[];
+export interface Response<T> {
+  data: T;
 }
 
 export type TodoParmas = Pick<Todo, "title" | "content">;

@@ -6,25 +6,33 @@ import LoginPage from "@/pages/auth/login";
 import SignupPage from "@/pages/auth/signup";
 import Layout from "@/components/common/Layout";
 import { AuthProvider, withAuth, withUnAuth } from "@/providers/auth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path={PAGE_PATH.HOME} element={withAuth(<HomePage />)}>
-              <Route
-                path={`${PAGE_PATH.TODOS}/:id`}
-                element={withAuth(<TodoDetailPage />)}
-              />
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path={PAGE_PATH.HOME} element={withAuth(<HomePage />)}>
+                <Route
+                  path={`${PAGE_PATH.TODOS}/:id`}
+                  element={withAuth(<TodoDetailPage />)}
+                />
+              </Route>
             </Route>
-          </Route>
-          <Route path={PAGE_PATH.LOGIN} element={withUnAuth(<LoginPage />)} />
-          <Route path={PAGE_PATH.SIGNUP} element={withUnAuth(<SignupPage />)} />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+            <Route path={PAGE_PATH.LOGIN} element={withUnAuth(<LoginPage />)} />
+            <Route
+              path={PAGE_PATH.SIGNUP}
+              element={withUnAuth(<SignupPage />)}
+            />
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

@@ -12,6 +12,8 @@ export const createApi = () => {
     },
   });
 
+  _api.interceptors.response.use((response) => response.data);
+
   return _api;
 };
 

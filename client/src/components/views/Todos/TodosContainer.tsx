@@ -1,15 +1,15 @@
 import { Outlet as OutletTodoDetail } from "react-router-dom";
-import { TodosResponse } from "@/types/todos";
 import { useTodosDispatch, useTodosState } from "@/providers/todos";
 import TodoForm from "./TodoForm";
 import TodoItem from "@/components/common/TodoItem";
 import useQuery from "@/utils/hooks/useQuery";
 import { getTodos } from "@/services/todos";
+import { Response, Todo } from "@/types/todos";
 
 const TodosContainer = () => {
   const { todos } = useTodosState();
   const dispatch = useTodosDispatch();
-  const { isLoading, isError } = useQuery<TodosResponse>({
+  const { isLoading, isError } = useQuery<Response<Todo[]>>({
     queryFn: getTodos,
     onSuccess: ({ data: todos }) => {
       dispatch({ type: "SET_TODOS", payload: { todos } });

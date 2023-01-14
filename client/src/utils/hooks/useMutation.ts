@@ -1,7 +1,6 @@
-import { AxiosResponse } from "axios";
 import { useState } from "react";
 interface Options<T, P> {
-  mutationFn: (params: P) => Promise<AxiosResponse<T>>;
+  mutationFn: (params: P) => Promise<T>;
   onSuccess?: (responseData: T, requestData: P) => void;
   onError?: (error: unknown) => void;
   onFinally?: () => void;
@@ -19,7 +18,7 @@ const useMutation = <T = unknown, P = void>({
   const mutate = async (params: P) => {
     try {
       setIsLoading(true);
-      const { data } = await mutationFn(params);
+      const data = await mutationFn(params);
       setIsError(false);
       onSuccess?.(data, params);
     } catch (error) {
