@@ -1,26 +1,22 @@
 import { Outlet as OutletTodoDetail } from "react-router-dom";
-import { useTodosDispatch, useTodosState } from "@/providers/todos";
 import TodoForm from "./TodoForm";
 import TodoItem from "@/components/common/TodoItem";
-import useQuery from "@/utils/hooks/useQuery";
 import { getTodos } from "@/services/todos";
-import { Response, Todo } from "@/types/todos";
+import { useQuery } from "@tanstack/react-query";
+import { CACHE_KEY } from "@/services/cacheKeys";
 
 const TodosContainer = () => {
-  const { todos } = useTodosState();
-  const dispatch = useTodosDispatch();
-  const { isLoading, isError } = useQuery<Response<Todo[]>>({
-    queryFn: getTodos,
-    onSuccess: ({ data: todos }) => {
-      dispatch({ type: "SET_TODOS", payload: { todos } });
-    },
-  });
+  const {
+    data: todos,
+    isLoading,
+    isError,
+  } = useQuery(CACHE_KEY.todos, getTodos);
 
   if (isLoading) {
     return <div>멋진 Todo를 가져오는 중...</div>;
   }
 
-  if (isError || !todos) {
+  if (isError) {
     return <div>Todo를 가져오는데 실패했습니다.</div>;
   }
 

@@ -12,7 +12,12 @@ export const createApi = () => {
     },
   });
 
-  _api.interceptors.response.use((response) => response.data);
+  _api.interceptors.response.use((response) => {
+    if (response.config.headers?.["Authorization"]) {
+      return response.data.data;
+    }
+    return response.data;
+  });
 
   return _api;
 };

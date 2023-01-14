@@ -1,12 +1,7 @@
 import TodosView from "@/components/views/Todos";
-import TodosProvider from "@/providers/todos";
 
 const HomePage = () => {
-  return (
-    <TodosProvider>
-      <TodosView />
-    </TodosProvider>
-  );
+  return <TodosView />;
 };
 
 export default HomePage;
