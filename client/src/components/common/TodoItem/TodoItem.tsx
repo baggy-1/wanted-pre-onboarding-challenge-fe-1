@@ -1,10 +1,10 @@
-import { API_PATH, PAGE_PATH } from "@/constants";
+import { PAGE_PATH } from "@/constants";
 import useMutation from "@/utils/hooks/useMutation";
 import { useTodosDispatch } from "@/providers/todos";
 import { Todo } from "@/types/todos";
 import { join } from "@/utils";
 import { useNavigate } from "react-router-dom";
-import api from "@/services/api";
+import { deleteTodo } from "@/services/todos";
 
 interface Props {
   item: Todo;
@@ -13,7 +13,13 @@ interface Props {
 const TodoItem = ({ item }: Props) => {
   const link = join(PAGE_PATH.TODOS, "/", item.id);
   const navigate = useNavigate();
-  const { mutate } = useMutation(api);
+  const { mutate } = useMutation({
+    mutationFn: (id: string) => deleteTodo(id),
+    onSuccess: (_, id) => {
+      dispatch({ type: "DELETE_TODO", payload: { id } });
+      navigate(PAGE_PATH.HOME, { replace: true });
+    },
+  });
   const dispatch = useTodosDispatch();
 
   const navigateLink = (link: string) => {
@@ -25,14 +31,7 @@ const TodoItem = ({ item }: Props) => {
       return;
     }
 
-    mutate({
-      url: join(API_PATH.TODO, "/", id),
-      method: "delete",
-      onSuccess: () => {
-        dispatch({ type: "DELETE_TODO", payload: { id } });
-        navigate(PAGE_PATH.HOME, { replace: true });
-      },
-    });
+    mutate(id);
   };
 
   return (
