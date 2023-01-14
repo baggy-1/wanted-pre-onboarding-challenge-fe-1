@@ -1,12 +1,13 @@
 import Form from "@/components/common/Form";
-import { API_URL, PAGE_PATH, REGEXP } from "@/constants";
+import { PAGE_PATH, REGEXP } from "@/constants";
 import useInput from "@/utils/hooks/useInput";
 import useMutation from "@/utils/hooks/useMutation";
-import { AuthResponse } from "@/types/todos";
 import { setAuthToken } from "@/utils";
 import { AxiosError } from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/auth";
+import { userLogin } from "@/services/auth";
+import { AuthParmas } from "@/types/auth";
 
 const SignUpContainer = () => {
   const navigate = useNavigate();
@@ -28,39 +29,37 @@ const SignUpContainer = () => {
   } = useInput({
     isValid: (value) => passwordProps.value === value,
   });
-  const { mutate } = useMutation();
+  const { mutate } = useMutation({
+    mutationFn: (params: AuthParmas) => userLogin(params),
+    onSuccess: ({ token }) => {
+      setAuthToken(token);
+      login(() => {
+        navigate(PAGE_PATH.HOME);
+      });
+    },
+    onError: (error) => {
+      if (!(error instanceof AxiosError)) {
+        console.error(error);
+        return;
+      }
+      switch (error.response?.status) {
+        case 409:
+        case 400:
+          alert(error.response.data.details);
+          break;
+        default:
+          console.error(error);
+      }
+    },
+  });
   const { login } = useAuth();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    mutate<AuthResponse>({
-      url: API_URL.SIGNUP,
-      method: "post",
-      body: {
-        email: emailProps.value,
-        password: passwordProps.value,
-      },
-      onSuccess: ({ token }) => {
-        setAuthToken(token);
-        login(() => {
-          navigate(PAGE_PATH.HOME);
-        });
-      },
-      onError: (error) => {
-        if (!(error instanceof AxiosError)) {
-          console.error(error);
-          return;
-        }
-        switch (error.response?.status) {
-          case 409:
-          case 400:
-            alert(error.response.data.details);
-            break;
-          default:
-            console.error(error);
-        }
-      },
+    mutate({
+      email: emailProps.value,
+      password: passwordProps.value,
     });
   };
 

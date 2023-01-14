@@ -1,21 +1,29 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useInput from "@/utils/hooks/useInput";
 import { FormEvent, useState } from "react";
-import { confirm, join } from "@/utils";
-import { API_PATH, PAGE_PATH } from "@/constants";
+import { confirm } from "@/utils";
+import { PAGE_PATH } from "@/constants";
 import useMutation from "@/utils/hooks/useMutation";
 import { useTodosDispatch, useTodosState } from "@/providers/todos";
-import { TodoResponse } from "@/types/todos";
+import { UpdateTodoParams } from "@/types/todos";
 import Form from "@/components/common/Form";
-import api from "@/services/api";
+import { updateTodo } from "@/services/todos";
 
 const TodoDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { mutate } = useMutation(api);
-  const [isEdit, setIsEdit] = useState(false);
   const state = useTodosState();
   const dispatch = useTodosDispatch();
+  const { mutate } = useMutation({
+    mutationFn: (params: UpdateTodoParams) => updateTodo(params),
+    onSuccess: ({ data: todo }) => {
+      dispatch({ type: "UPDATE_TODO", payload: { todo } });
+    },
+    onFinally: () => {
+      setIsEdit(false);
+    },
+  });
+  const [isEdit, setIsEdit] = useState(false);
   const todo = state.todos.find((todo) => todo.id === id);
   const {
     others: { setValue: setTitle },
@@ -81,16 +89,10 @@ const TodoDetail = () => {
       return;
     }
 
-    mutate<TodoResponse>({
-      url: join(API_PATH.TODO, "/", id),
-      method: "put",
-      body: { title: titleProps.value, content: contentProps.value },
-      onSuccess: ({ data: todo }) => {
-        dispatch({ type: "UPDATE_TODO", payload: { todo } });
-      },
-      onFinally: () => {
-        setIsEdit(false);
-      },
+    mutate({
+      id: todo.id,
+      title: titleProps.value,
+      content: contentProps.value,
     });
   };
 

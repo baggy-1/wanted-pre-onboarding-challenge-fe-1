@@ -1,12 +1,11 @@
-import { API_PATH } from "@/constants";
 import useInput from "@/utils/hooks/useInput";
 import useMutation from "@/utils/hooks/useMutation";
 import { useTodosDispatch } from "@/providers/todos";
-import { TodoResponse } from "@/types/todos";
+import { TodoParmas } from "@/types/todos";
 import { confirm } from "@/utils";
 import { FormEvent } from "react";
 import Form from "@/components/common/Form";
-import api from "@/services/api";
+import { addTodo } from "@/services/todos";
 
 const TodoFormContainer = () => {
   const {
@@ -17,7 +16,15 @@ const TodoFormContainer = () => {
     others: { setValue: setContent },
     props: contentProps,
   } = useInput();
-  const { mutate } = useMutation(api);
+  const { mutate } = useMutation({
+    mutationFn: (params: TodoParmas) => addTodo(params),
+    onSuccess: ({ data: todo }) => {
+      dispatch({ type: "ADD_TODO", payload: { todo } });
+    },
+    onFinally: () => {
+      clearInput();
+    },
+  });
   const dispatch = useTodosDispatch();
 
   const clearInput = () => {
@@ -41,19 +48,9 @@ const TodoFormContainer = () => {
       return;
     }
 
-    mutate<TodoResponse>({
-      url: API_PATH.TODO,
-      method: "post",
-      body: {
-        title: titleProps.value,
-        content: contentProps.value,
-      },
-      onSuccess: ({ data: todo }) => {
-        dispatch({ type: "ADD_TODO", payload: { todo } });
-      },
-      onFinally: () => {
-        clearInput();
-      },
+    mutate({
+      title: titleProps.value,
+      content: contentProps.value,
     });
   };
 

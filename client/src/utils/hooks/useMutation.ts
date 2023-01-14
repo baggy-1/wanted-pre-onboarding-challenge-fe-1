@@ -1,42 +1,38 @@
-import axios, { AxiosInstance } from "axios";
-
-type Method = "POST" | "PUT" | "DELETE";
-interface mutateParams<T> {
-  url: string;
-  method: Lowercase<Method>;
-  body?: unknown;
-  onSuccess?: (data: T) => void;
+import { AxiosResponse } from "axios";
+import { useState } from "react";
+interface Options<T, P> {
+  mutationFn: (params: P) => Promise<AxiosResponse<T>>;
+  onSuccess?: (responseData: T, requestData: P) => void;
   onError?: (error: unknown) => void;
   onFinally?: () => void;
 }
 
-const useMutation = (instance?: AxiosInstance) => {
-  const _instance = instance || axios.create();
+const useMutation = <T = unknown, P = void>({
+  mutationFn,
+  onSuccess,
+  onError,
+  onFinally,
+}: Options<T, P>) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  const mutate = async <T>({
-    url,
-    method,
-    body,
-    onSuccess,
-    onError,
-    onFinally,
-  }: mutateParams<T>) => {
+  const mutate = async (params: P) => {
     try {
-      const { data } = await _instance<T>({
-        method,
-        data: body,
-        url,
-      });
-      onSuccess?.(data);
+      setIsLoading(true);
+      const { data } = await mutationFn(params);
+      setIsError(false);
+      onSuccess?.(data, params);
     } catch (error) {
       console.error(error);
+      setIsError(true);
       onError?.(error);
     } finally {
+      setIsLoading(false);
       onFinally?.();
     }
   };
 
-  return { mutate };
+  return { mutate, isLoading, isError };
 };
 
 export default useMutation;
