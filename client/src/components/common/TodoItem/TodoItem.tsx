@@ -1,10 +1,9 @@
 import { PAGE_PATH } from "@/constants";
-import useMutation from "@/utils/hooks/useMutation";
-import { useTodosDispatch } from "@/providers/todos";
 import { Todo } from "@/types/todos";
 import { join } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { deleteTodo } from "@/services/todos";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
   item: Todo;
@@ -15,16 +14,10 @@ const TodoItem = ({ item }: Props) => {
   const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationFn: (id: string) => deleteTodo(id),
-    onSuccess: (_, id) => {
-      dispatch({ type: "DELETE_TODO", payload: { id } });
+    onSuccess: () => {
       navigate(PAGE_PATH.HOME, { replace: true });
     },
   });
-  const dispatch = useTodosDispatch();
-
-  const navigateLink = (link: string) => {
-    navigate(link);
-  };
 
   const onClickDeleteTodo = (id: string) => async () => {
     if (!confirm("정말 삭제하시겠습니까?")) {
@@ -36,7 +29,7 @@ const TodoItem = ({ item }: Props) => {
 
   return (
     <div className="relative flex items-center justify-between w-full h-12 p-2 border-t border-b hover:bg-blue-500 hover:text-white cursor-pointer">
-      <div onClick={() => navigateLink(link)}>
+      <div onClick={() => navigate(link)}>
         <div className="h-auto overflow-hidden break-all w-36 whitespace-nowrap text-ellipsis">
           {item.title}
         </div>

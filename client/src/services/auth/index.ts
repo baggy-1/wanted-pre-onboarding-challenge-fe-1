@@ -5,12 +5,12 @@ import { AxiosError } from "axios";
 
 export const userLogin = (params: AuthParmas) => {
   const api = createApi();
-  return api.post<AuthResponse>(API_PATH.LOGIN, params);
+  return api.post<null, AuthResponse>(API_PATH.LOGIN, params);
 };
 
 export const userSignUp = (params: AuthParmas) => {
   const api = createApi();
-  return api.post<AuthResponse>(API_PATH.SIGNUP, params);
+  return api.post<null, AuthResponse>(API_PATH.SIGNUP, params);
 };
 
 export const handleAuthError = (error: unknown) => {
@@ -18,11 +18,12 @@ export const handleAuthError = (error: unknown) => {
     console.error(error);
     return;
   }
+
   switch (error.response?.status) {
     case 409:
     case 400:
       alert(error.response.data.details);
-      break;
+      return;
     default:
       console.error(error);
   }

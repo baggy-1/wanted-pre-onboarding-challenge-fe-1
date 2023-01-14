@@ -1,11 +1,10 @@
 import useInput from "@/utils/hooks/useInput";
-import useMutation from "@/utils/hooks/useMutation";
-import { useTodosDispatch } from "@/providers/todos";
 import { TodoParmas } from "@/types/todos";
 import { confirm } from "@/utils";
 import { FormEvent } from "react";
 import Form from "@/components/common/Form";
 import { addTodo } from "@/services/todos";
+import { useMutation } from "@tanstack/react-query";
 
 const TodoFormContainer = () => {
   const {
@@ -16,16 +15,7 @@ const TodoFormContainer = () => {
     others: { setValue: setContent },
     props: contentProps,
   } = useInput();
-  const { mutate } = useMutation({
-    mutationFn: (params: TodoParmas) => addTodo(params),
-    onSuccess: ({ data: todo }) => {
-      dispatch({ type: "ADD_TODO", payload: { todo } });
-    },
-    onFinally: () => {
-      clearInput();
-    },
-  });
-  const dispatch = useTodosDispatch();
+  const { mutate } = useMutation((params: TodoParmas) => addTodo(params));
 
   const clearInput = () => {
     setTitle("");
@@ -48,10 +38,17 @@ const TodoFormContainer = () => {
       return;
     }
 
-    mutate({
-      title: titleProps.value,
-      content: contentProps.value,
-    });
+    mutate(
+      {
+        title: titleProps.value,
+        content: contentProps.value,
+      },
+      {
+        onSuccess: () => {
+          clearInput();
+        },
+      }
+    );
   };
 
   return (

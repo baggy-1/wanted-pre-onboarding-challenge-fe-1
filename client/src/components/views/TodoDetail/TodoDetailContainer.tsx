@@ -3,37 +3,14 @@ import useInput from "@/utils/hooks/useInput";
 import { FormEvent, useState } from "react";
 import { confirm } from "@/utils";
 import { PAGE_PATH } from "@/constants";
-import useMutation from "@/utils/hooks/useMutation";
-import { useTodosDispatch, useTodosState } from "@/providers/todos";
-import { UpdateTodoParams } from "@/types/todos";
 import Form from "@/components/common/Form";
-import { updateTodo } from "@/services/todos";
+import { getTodoById, updateTodo } from "@/services/todos";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { CACHE_KEY } from "@/services/cacheKeys";
 
 const TodoDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const state = useTodosState();
-  const dispatch = useTodosDispatch();
-  const { mutate } = useMutation({
-    mutationFn: (params: UpdateTodoParams) => updateTodo(params),
-    onSuccess: ({ data: todo }) => {
-      dispatch({ type: "UPDATE_TODO", payload: { todo } });
-    },
-    onFinally: () => {
-      setIsEdit(false);
-    },
-  });
-  const [isEdit, setIsEdit] = useState(false);
-  const todo = state.todos.find((todo) => todo.id === id);
-  const {
-    others: { setValue: setTitle },
-    props: titleProps,
-  } = useInput({ initValue: todo?.title });
-  const {
-    others: { setValue: setContent },
-    props: contentProps,
-  } = useInput({ initValue: todo?.content });
-
   const onClickMoveHome = () => {
     navigate(PAGE_PATH.HOME, { replace: true });
   };
@@ -47,7 +24,27 @@ const TodoDetail = () => {
     );
   }
 
-  if (!todo) {
+  const {
+    data: todo,
+    isLoading,
+    isError,
+  } = useQuery(CACHE_KEY.todo(id), () => getTodoById(id));
+  const { mutate } = useMutation(updateTodo);
+  const [isEdit, setIsEdit] = useState(false);
+  const {
+    others: { setValue: setTitle },
+    props: titleProps,
+  } = useInput({ initValue: todo?.title });
+  const {
+    others: { setValue: setContent },
+    props: contentProps,
+  } = useInput({ initValue: todo?.content });
+
+  if (isLoading) {
+    return <div>로딩중...</div>;
+  }
+
+  if (isError) {
     return (
       <>
         <div>유효하지 않은 Todo입니다.</div>
@@ -89,11 +86,18 @@ const TodoDetail = () => {
       return;
     }
 
-    mutate({
-      id: todo.id,
-      title: titleProps.value,
-      content: contentProps.value,
-    });
+    mutate(
+      {
+        id: todo.id,
+        title: titleProps.value,
+        content: contentProps.value,
+      },
+      {
+        onSuccess: () => {
+          setIsEdit(false);
+        },
+      }
+    );
   };
 
   return (
