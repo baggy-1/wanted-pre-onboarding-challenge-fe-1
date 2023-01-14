@@ -5,8 +5,8 @@ import { Navigate, useLocation } from "react-router-dom";
 
 interface AuthContextType {
   isValid: boolean;
-  login: (callback: VoidFunction) => void;
-  logout: (callback: VoidFunction) => void;
+  login: (callback?: VoidFunction) => void;
+  logout: (callback?: VoidFunction) => void;
 }
 
 interface Props {
@@ -18,14 +18,14 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: Props) => {
   const [isValid, setIsValid] = useState(!!getAuthToken());
 
-  const login = (callback: VoidFunction) => {
+  const login: AuthContextType["login"] = (callback) => {
     setIsValid(true);
-    callback();
+    callback?.();
   };
 
-  const logout = (callback: VoidFunction) => {
+  const logout: AuthContextType["logout"] = (callback) => {
     setIsValid(false);
-    callback();
+    callback?.();
   };
 
   return (

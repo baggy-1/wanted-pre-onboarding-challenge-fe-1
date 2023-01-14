@@ -9,7 +9,6 @@ const Nav = () => {
 
   const onClickLogout = () => {
     removeAuthToken();
-    navigate(PAGE_PATH.LOGIN);
   };
 
   const onClickMoveHome = () => {

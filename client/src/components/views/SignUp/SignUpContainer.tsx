@@ -3,13 +3,13 @@ import { PAGE_PATH, REGEXP } from "@/constants";
 import useInput from "@/utils/hooks/useInput";
 import useMutation from "@/utils/hooks/useMutation";
 import { setAuthToken } from "@/utils";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/providers/auth";
-import { handleAuthError, userLogin } from "@/services/auth";
+import { handleAuthError, userSignUp } from "@/services/auth";
 import { AuthParmas } from "@/types/auth";
 
 const SignUpContainer = () => {
-  const navigate = useNavigate();
+  const { login: signUp } = useAuth();
   const {
     others: { isValid: isValidEmail },
     props: emailProps,
@@ -29,16 +29,13 @@ const SignUpContainer = () => {
     isValid: (value) => passwordProps.value === value,
   });
   const { mutate } = useMutation({
-    mutationFn: (params: AuthParmas) => userLogin(params),
+    mutationFn: (params: AuthParmas) => userSignUp(params),
     onSuccess: ({ token }) => {
       setAuthToken(token);
-      login(() => {
-        navigate(PAGE_PATH.HOME);
-      });
+      signUp();
     },
     onError: handleAuthError,
   });
-  const { login } = useAuth();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
