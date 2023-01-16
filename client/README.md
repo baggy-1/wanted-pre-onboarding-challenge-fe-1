@@ -1,5 +1,23 @@
 # 🔒 로그인 기능이 있는 Todo App
 
+## How to use
+
+### client
+
+```shell
+npm i
+
+npm run dev
+```
+
+### [server](https://github.com/chigomuh/wanted-pre-onboarding-challenge-fe-1-api)
+
+```shell
+npm i
+
+npm start # http://localhost:8080
+```
+
 <details>
 <summary>🪓 1️회차 리팩토링</summary>
 
@@ -638,6 +656,109 @@ export default LoginForm;
         │    └── index.ts -> 유틸리티 훅
         └── [util].ts -> 유틸리티 함수
 
+```
+
+## React-Query 적용
+
+기존 상태 동기화를 위해 useReducer, contextApi를 활용한 전역 상태 관리
+
+```typescript
+// fetch한 데이터를 dispatch로 적용
+const { todos } = useTodosState();
+const dispatch = useTodosDispatch();
+const { isLoading, isError } = useQuery<Response<Todo[]>>({
+  queryFn: getTodos,
+  onSuccess: ({ data: todos }) => {
+    dispatch({ type: "SET_TODOS", payload: { todos } });
+  },
+});
+
+// 삭제, 수정한 데이터들을 dispatch로 적용
+const { mutate } = useMutation({
+  mutationFn: (id: string) => deleteTodo(id),
+  onSuccess: (_, id) => {
+    dispatch({ type: "DELETE_TODO", payload: { id } });
+    navigate(PAGE_PATH.HOME, { replace: true });
+  },
+});
+
+const { mutate } = useMutation({
+  mutationFn: (params: UpdateTodoParams) => updateTodo(params),
+  onSuccess: ({ data: todo }) => {
+    dispatch({ type: "UPDATE_TODO", payload: { todo } });
+  },
+  onFinally: () => {
+    setIsEdit(false);
+  },
+});
+```
+
+변경 후
+
+```typescript
+const {
+  data: todo,
+  isLoading,
+  isError,
+} = useQuery(CACHE_KEY.todo(id), () => getTodoById(id));
+
+const { mutate } = useMutation({
+  mutationFn: (id: string) => deleteTodo(id),
+});
+```
+
+## Suspense, Error Boundary 적용
+
+기존 react-query 로딩, 에러 상태 처리
+
+```typescript
+// react-query 호출 컴포넌트 내부
+const {
+  data: todo,
+  isLoading,
+  isError,
+} = useQuery(CACHE_KEY.todo(id), () => getTodoById(id));
+
+if (isLoading) {
+  return <div>로딩중...</div>;
+}
+
+if (isError) {
+  return (
+    <>
+      <div>유효하지 않은 Todo입니다.</div>
+      <button onClick={onClickMoveHome}>메인으로 가기</button>
+    </>
+  );
+}
+
+return (
+  // ...
+)
+```
+
+변경 후
+
+```typescript
+const TodoDetail = () => {
+  // useSuspendedQuery hook은 toss/useSuspendedQuery를 참고함
+  // https://slash.page/libraries/react/react-query/src/hooks/usesuspendedquery.i18n/
+  const { data: todo } = useSuspendedQuery(CACHE_KEY.todo(id), () => getTodoById(id)
+
+  return (
+    // ...
+  )
+}
+
+
+// SuspenseErrorBoundary로 감싸주기
+const TodoDetailContainer = () => {
+  return (
+    <SuspenseErrorBoundary>
+      <TodoDetail />
+    </SuspenseErrorBoundary>
+  );
+};
 ```
 
 </details>
