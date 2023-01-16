@@ -1,55 +1,8 @@
-import useInput from "@/utils/hooks/useInput";
-import { TodoParmas } from "@/types/todos";
-import { confirm } from "@/utils";
-import { FormEvent } from "react";
 import Form from "@/components/common/Form";
-import { addTodo } from "@/services/todos";
-import { useMutation } from "@tanstack/react-query";
+import useTodoForm from "./hooks/useTodoForm";
 
 const TodoFormContainer = () => {
-  const {
-    others: { setValue: setTitle },
-    props: titleProps,
-  } = useInput();
-  const {
-    others: { setValue: setContent },
-    props: contentProps,
-  } = useInput();
-  const { mutate } = useMutation((params: TodoParmas) => addTodo(params));
-
-  const clearInput = () => {
-    setTitle("");
-    setContent("");
-  };
-
-  const isSomeEmpty = (...values: string[]) => {
-    return values.some((value) => value === "");
-  };
-
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (isSomeEmpty(titleProps.value, contentProps.value)) {
-      alert("제목과 내용을 모두 입력해주세요.");
-      return;
-    }
-
-    if (!confirm("Todo를 추가하시겠습니까?")) {
-      return;
-    }
-
-    mutate(
-      {
-        title: titleProps.value,
-        content: contentProps.value,
-      },
-      {
-        onSuccess: () => {
-          clearInput();
-        },
-      }
-    );
-  };
+  const { titleProps, contentProps, onSubmit } = useTodoForm();
 
   return (
     <Form

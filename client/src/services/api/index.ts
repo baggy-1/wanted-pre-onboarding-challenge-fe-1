@@ -1,6 +1,7 @@
 import { API_BASE_URL } from "@/constants";
 import { getAuthToken } from "@/utils";
 import axios from "axios";
+import { handleAuthError } from "@/services/auth";
 
 export const createApi = () => {
   const token = getAuthToken();
@@ -17,7 +18,7 @@ export const createApi = () => {
       return response.data.data;
     }
     return response.data;
-  });
+  }, handleAuthError);
 
   return _api;
 };

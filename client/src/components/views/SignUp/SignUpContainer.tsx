@@ -52,6 +52,8 @@ const SignUpContainer = () => {
     passwordCheck: !isValidPasswordCheck && passwordCheckProps.value !== "",
   };
 
+  const isAllValid = isValidEmail && isValidPassword && isValidPasswordCheck;
+
   return (
     <div className="flex items-center justify-center w-full h-screen">
       <div className="flex flex-col justify-center items-center w-full max-w-[20rem] h-auto p-8 border rounded-lg gap-4 shadow-xl">
@@ -72,12 +74,7 @@ const SignUpContainer = () => {
           <Form.Notice>
             {isShowNotice.passwordCheck ? "비밀번호를 확인해주세요." : ""}
           </Form.Notice>
-          <Form.Button
-            type="submit"
-            disabled={
-              !isValidEmail || !isValidPassword || !isValidPasswordCheck
-            }
-          >
+          <Form.Button type="submit" disabled={!isAllValid}>
             회원가입
           </Form.Button>
         </Form>
