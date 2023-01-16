@@ -38,17 +38,11 @@ const TodoFormContainer = () => {
       return;
     }
 
-    mutate(
-      {
-        title: titleProps.value,
-        content: contentProps.value,
-      },
-      {
-        onSuccess: () => {
-          clearInput();
-        },
-      }
-    );
+    mutate({
+      title: titleProps.value,
+      content: contentProps.value,
+    });
+    clearInput();
   };
 
   return (

@@ -4,32 +4,35 @@ import { FormEvent, useState } from "react";
 import { confirm } from "@/utils";
 import { PAGE_PATH } from "@/constants";
 import Form from "@/components/common/Form";
-import { getTodoById, updateTodo } from "@/services/todos";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { getTodoById, updateTodo, deleteTodo } from "@/services/todos";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CACHE_KEY } from "@/services/cacheKeys";
+import { UpdateTodoParams } from "@/types/todos";
 
 const TodoDetail = () => {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params.id || "";
   const navigate = useNavigate();
-  const onClickMoveHome = () => {
-    navigate(PAGE_PATH.HOME, { replace: true });
-  };
 
-  if (!id) {
-    return (
-      <>
-        <div>잘못된 접근입니다.</div>
-        <button onClick={onClickMoveHome}>메인으로 가기</button>
-      </>
-    );
-  }
-
+  const client = useQueryClient();
   const {
     data: todo,
     isLoading,
     isError,
   } = useQuery(CACHE_KEY.todo(id), () => getTodoById(id));
-  const { mutate } = useMutation(updateTodo);
+  const { mutate: updateMutate } = useMutation(
+    (params: UpdateTodoParams) => updateTodo(params),
+    {
+      onSuccess: () => {
+        client.invalidateQueries(CACHE_KEY.todos);
+      },
+    }
+  );
+  const { mutate: deleteMutate } = useMutation((id: string) => deleteTodo(id), {
+    onSuccess: () => {
+      client.invalidateQueries(CACHE_KEY.todos);
+    },
+  });
   const [isEdit, setIsEdit] = useState(false);
   const {
     others: { setValue: setTitle },
@@ -39,6 +42,10 @@ const TodoDetail = () => {
     others: { setValue: setContent },
     props: contentProps,
   } = useInput({ initValue: todo?.content });
+
+  const onClickMoveHome = () => {
+    navigate(PAGE_PATH.HOME, { replace: true });
+  };
 
   if (isLoading) {
     return <div>로딩중...</div>;
@@ -53,19 +60,13 @@ const TodoDetail = () => {
     );
   }
 
-  const onClickToggleEdit = () => {
-    setIsEdit((prev) => !prev);
-  };
+  const onClickDeleteTodo = (id: string) => () => {
+    if (!confirm("정말 삭제하시겠습니까?")) {
+      return;
+    }
 
-  const setPrevTodoValues = () => {
-    const { title, content } = todo;
-    setTitle(title);
-    setContent(content);
-  };
-
-  const onClickCancelEdit = () => {
-    setPrevTodoValues();
-    onClickToggleEdit();
+    deleteMutate(id);
+    navigate(PAGE_PATH.HOME, { replace: true });
   };
 
   const isUpdateInputValues = () => {
@@ -86,18 +87,27 @@ const TodoDetail = () => {
       return;
     }
 
-    mutate(
-      {
-        id: todo.id,
-        title: titleProps.value,
-        content: contentProps.value,
-      },
-      {
-        onSuccess: () => {
-          setIsEdit(false);
-        },
-      }
-    );
+    updateMutate({
+      id: todo.id,
+      title: titleProps.value,
+      content: contentProps.value,
+    });
+    setIsEdit(false);
+  };
+
+  const onClickToggleEdit = () => {
+    setIsEdit((prev) => !prev);
+  };
+
+  const setPrevTodoValues = () => {
+    const { title, content } = todo;
+    setTitle(title);
+    setContent(content);
+  };
+
+  const onClickCancelEdit = () => {
+    setPrevTodoValues();
+    onClickToggleEdit();
   };
 
   return (
@@ -112,7 +122,7 @@ const TodoDetail = () => {
         ❌
       </button>
       <Form
-        className="flex flex-col items-center justify-start w-full h-full gap-8 p-4"
+        className="flex flex-col items-center justify-start w-full h-full gap-8 p-4 border-t-2"
         onSubmit={onSubmitTodoEdit}
       >
         <div className="flex items-center justify-center w-full h-auto gap-4">
@@ -152,13 +162,22 @@ const TodoDetail = () => {
             </Form.Button>
           </div>
         ) : (
-          <Form.Button
-            className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
-            type="button"
-            onClick={onClickToggleEdit}
-          >
-            수정
-          </Form.Button>
+          <div className="flex gap-4">
+            <Form.Button
+              className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
+              type="button"
+              onClick={onClickToggleEdit}
+            >
+              수정
+            </Form.Button>
+            <Form.Button
+              className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
+              type="button"
+              onClick={onClickDeleteTodo(id)}
+            >
+              삭제
+            </Form.Button>
+          </div>
         )}
       </Form>
     </div>

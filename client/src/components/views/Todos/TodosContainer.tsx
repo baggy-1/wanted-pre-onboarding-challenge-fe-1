@@ -24,9 +24,8 @@ const TodosContainer = () => {
     <div className="flex flex-col items-center justify-center w-full h-[calc(100vh-5rem)]">
       <div className="flex items-center justify-center w-4/5 max-w-5xl shadow-2xl h-4/5 max-h-5xl rounded-2xl">
         <div className="w-1/5 h-full border-r-4">
-          {/* <TodoList /> */}
           <div className="w-full h-full overflow-hidden">
-            <div className="w-full h-20 p-4 text-2xl font-bold text-center border-b-2">
+            <div className="w-full h-18 p-4 text-2xl font-bold text-center border-b-[3px]">
               Todo 목록
             </div>
             <div className="w-full h-[calc(100%-5rem)] overflow-auto">
