@@ -1,9 +1,11 @@
+import { CACHE_KEY } from "@/services/cacheKeys";
 import { addTodo } from "@/services/todos";
 import { TodoParmas } from "@/types/todos";
 import useInput from "@/utils/hooks/useInput";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useTodoForm = () => {
+  const client = useQueryClient();
   const {
     others: { setValue: setTitle },
     props: titleProps,
@@ -12,7 +14,11 @@ const useTodoForm = () => {
     others: { setValue: setContent },
     props: contentProps,
   } = useInput();
-  const { mutate } = useMutation((params: TodoParmas) => addTodo(params));
+  const { mutate } = useMutation((params: TodoParmas) => addTodo(params), {
+    onSuccess: () => {
+      client.invalidateQueries(CACHE_KEY.todos);
+    },
+  });
 
   const clearInput = () => {
     setTitle("");

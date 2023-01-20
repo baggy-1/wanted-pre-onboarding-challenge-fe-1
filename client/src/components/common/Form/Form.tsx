@@ -9,6 +9,8 @@ interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "placeholder"> {
   label: string;
   value: string;
+  name: string;
+  type: React.InputHTMLAttributes<HTMLInputElement>["type"];
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 }
 
@@ -44,12 +46,14 @@ const Input = ({
   className,
   type,
   label: placeholder,
+  name,
   ...otherProps
 }: InputProps) => {
   return (
     <input
       className={className || "w-full border rounded-sm min-h-[1rem]"}
       type={type}
+      name={name}
       placeholder={placeholder}
       {...otherProps}
     />
