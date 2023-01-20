@@ -58,16 +58,27 @@ const SignUpContainer = () => {
     <div className="flex items-center justify-center w-full h-screen">
       <div className="flex flex-col justify-center items-center w-full max-w-[20rem] h-auto p-8 border rounded-lg gap-4 shadow-xl">
         <Form onSubmit={onSubmit}>
-          <Form.Input type="email" label="이메일" {...emailProps} />
+          <Form.Input
+            type="email"
+            name="email"
+            label="이메일"
+            {...emailProps}
+          />
           <Form.Notice>
             {isShowNotice.email ? "이메일 형식에 맞춰주세요." : ""}
           </Form.Notice>
-          <Form.Input type="password" label="비밀번호" {...passwordProps} />
+          <Form.Input
+            type="password"
+            name="password"
+            label="비밀번호"
+            {...passwordProps}
+          />
           <Form.Notice>
             {isShowNotice.password ? "비밀번호는 8자 이상입니다." : ""}
           </Form.Notice>
           <Form.Input
             type="password"
+            name="passwordCheck"
             label="비밀번호 확인"
             {...passwordCheckProps}
           />

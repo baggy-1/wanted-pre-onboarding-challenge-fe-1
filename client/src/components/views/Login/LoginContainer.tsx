@@ -34,8 +34,18 @@ const LoginContainer = () => {
     <div className="flex items-center justify-center w-full h-screen">
       <div className="flex flex-col justify-center items-center w-full max-w-[20rem] h-auto p-8 border rounded-lg gap-4 shadow-xl">
         <Form onSubmit={onSubmit}>
-          <Form.Input type="email" label="이메일" {...emailProps} />
-          <Form.Input type="password" label="비밀번호" {...passwordProps} />
+          <Form.Input
+            type="email"
+            name="email"
+            label="이메일"
+            {...emailProps}
+          />
+          <Form.Input
+            type="password"
+            name="password"
+            label="비밀번호"
+            {...passwordProps}
+          />
           <Form.Button type="submit">로그인</Form.Button>
         </Form>
         <span>처음이신가요?</span>

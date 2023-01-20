@@ -49,6 +49,7 @@ const TodoDetail = () => {
           <Form.Input
             className="w-4/5 h-8 p-2 text-xl border rounded-lg"
             type="text"
+            name="updateTitle"
             label="제목"
             {...titleProps}
             disabled={!isEdit}
@@ -59,6 +60,7 @@ const TodoDetail = () => {
           <Form.Input
             className="w-4/5 h-32 p-2 text-xl border rounded-lg"
             type="text"
+            name="updateContent"
             label="내용"
             {...contentProps}
             disabled={!isEdit}
