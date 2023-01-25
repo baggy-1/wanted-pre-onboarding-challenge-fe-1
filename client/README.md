@@ -1,8 +1,57 @@
 # 🔒 로그인 기능이 있는 Todo App
 
-## How to use
+# 목차
 
-### client
+- [최종 구현](#최종-구현)
+  - [로그인 / 회원가입 페이지](#로그인--회원가입-페이지)
+  - [로그인 / 로그아웃](#로그인--로그아웃)
+  - [메인 페이지](#메인-페이지)
+  - [Todo 기능](#todo-기능)
+    - [생성](#생성)
+    - [수정](#수정)
+    - [삭제](#삭제)
+- [설치 및 실행 방법](#설치-및-실행-방법)
+  - [client](#client)
+  - [server](#server)
+- [구현 요구 사항](#구현-요구-사항)
+  - [Login / SignUp](#login--signup)
+  - [Todo List](#todo-list)
+- [사용 라이브러리](#사용-라이브러리)
+- [폴더 구조](#폴더-구조)
+- [고민한 점](#고민한-점)
+- [한계점 및 개선 사항](#한계점-및-개선-사항)
+
+# 최종 구현
+
+## 로그인 / 회원가입 페이지
+
+![login_signup_page](https://user-images.githubusercontent.com/84620459/214481319-51bf6367-e1b7-4f16-aef1-b6cec75e5e2e.gif)
+
+## 로그인 / 로그아웃
+
+![login_logout](https://user-images.githubusercontent.com/84620459/214481317-496b133f-846c-4db9-9b9b-c933c1c486ef.gif)
+
+## 메인 페이지
+
+![main_page](https://user-images.githubusercontent.com/84620459/214481321-46059cc4-3244-4c63-b6f3-0b7b6ed9a449.gif)
+
+## Todo 기능
+
+### 생성
+
+![create_todo](https://user-images.githubusercontent.com/84620459/214481309-33fb28bd-ddb3-45ac-acbb-c9b767226152.gif)
+
+### 수정
+
+![update_todo](https://user-images.githubusercontent.com/84620459/214481324-bc1044a4-c026-4512-b105-652942d40693.gif)
+
+### 삭제
+
+![delete_todo](https://user-images.githubusercontent.com/84620459/214481316-bf73077b-f8dc-4ec2-bb5d-e41ef0e352e8.gif)
+
+# 설치 및 실행 방법
+
+## client
 
 ```shell
 npm i
@@ -10,7 +59,7 @@ npm i
 npm run dev
 ```
 
-### [server](https://github.com/chigomuh/wanted-pre-onboarding-challenge-fe-1-api)
+## [server](https://github.com/chigomuh/wanted-pre-onboarding-challenge-fe-1-api)
 
 ```shell
 npm i
@@ -18,747 +67,147 @@ npm i
 npm start # http://localhost:8080
 ```
 
-<details>
-<summary>🪓 1️회차 리팩토링</summary>
+# 구현 요구 사항
 
-## 폴더 구조
+## Login / SignUp
+
+- /auth 경로에 로그인 / 회원가입 기능을 개발합니다
+  - 로그인, 회원가입을 별도의 경로로 분리해도 무방합니다
+  - [x] 최소한 이메일, 비밀번호 input, 제출 button을 갖도록 구성해주세요
+- 이메일과 비밀번호의 유효성을 확인합니다
+  - [x] 이메일 조건 : 최소 `@`, `.` 포함
+  - [x] 비밀번호 조건 : 8자 이상 입력
+  - [x] 이메일과 비밀번호가 모두 입력되어 있고, 조건을 만족해야 제출 버튼이 활성화 되도록 해주세요
+- 로그인 API를 호출하고, 올바른 응답을 받았을 때 루트 경로로 이동시켜주세요
+  - [x] 응답으로 받은 토큰은 로컬 스토리지에 저장해주세요
+  - [x] 다음 번에 로그인 시 토큰이 존재한다면 루트 경로로 리다이렉트 시켜주세요
+  - [x] 어떤 경우든 토큰이 유효하지 않다면 사용자에게 알리고 로그인 페이지로 리다이렉트 시켜주세요
+
+## Todo List
+
+- Todo List API를 호출하여 Todo List CRUD 기능을 구현해주세요
+  - [x] 목록 / 상세 영역으로 나누어 구현해주세요
+  - [x] Todo 목록을 볼 수 있습니다.
+  - [x] Todo 추가 버튼을 클릭하면 할 일이 추가 됩니다.
+  - [x] Todo 수정 버튼을 클릭하면 수정 모드를 활성화하고, 수정 내용을 제출하거나 취소할 수 있습니다.
+  - [x] Todo 삭제 버튼을 클릭하면 해당 Todo를 삭제할 수 있습니다.
+- 한 화면 내에서 Todo List와 개별 Todo의 상세를 확인할 수 있도록 해주세요.
+  - [x] 새로고침을 했을 때 현재 상태가 유지되어야 합니다.
+  - [x] 개별 Todo를 조회 순서에 따라 페이지 뒤로가기를 통하여 조회할 수 있도록 해주세요.
+- 한 페이지 내에서 새로고침 없이 데이터가 정합성을 갖추도록 구현해주세요
+  - [x] 수정되는 Todo의 내용이 목록에서도 실시간으로 반영되어야 합니다
+
+# 사용 라이브러리
+
+- create-vite
+
+  - create-react-app(CRA)보다 빠르고 가볍기 때문에 선택함
+
+- @tanstack/react-query ^4.22.0
+
+  - 컴포넌트 내부에서 서버와 클라이언트 상태를 분리하기 위해 선택함
+  - 분리된 컴포넌트 간, 비동기 상태를 일치 시키기 위해 사용함
+
+- axios ^1.2.1
+
+  - api 호출 전후 등 서비스 별 설정들을 관리하기 위해 사용함
+
+- cypress ^12.3.0
+
+  - 리팩토링 시, 기존 기능의 동작을 자동으로 확인하는 e2e 테스트를 위해 사용함
+
+- tailwindcss ^3.2.4
+
+  - css 파일을 별도로 분리하지 않고 빠르고 동일한 스타일을 사용하기 위해 사용함
+
+- typescript ^4.9.3
+  - 런타임 오류를 개발 시점에 발견하고 타입 추론을 활용한 개발 속도 향상을 위해 사용함
+
+# 폴더 구조
 
 ```shell
-- src
--- api -> api 관련 (axios instance, interceptors 등)
--- components -> pages에서 바로 사용가능한 컴포넌트들
--- const -> 한 번 선언하면 바뀌기 어려운 값들
--- hooks -> 컴포넌트 내부에서 작성하기에 눈에 거슬리는 것들
--- pages -> 사용자가 마주하는 페이지, provider 제외, 상태 로직 없음
--- provider -> 공유하고자 하는 상태 provider들
--- types -> 두 번 이상 사용하는 type들
--- util -> 재사용하고자 하는 간단한 함수들
+src
+├── components
+│   ├── common
+│   │   ├── Form
+│   │   ├── Layout
+│   │   │   └── Nav
+│   │   ├── SuspenseErrorBoundary
+│   │   │   └── ErrorBoundary
+│   │   └── TodoItem
+│   └── views
+│       ├── Login
+│       ├── SignUp
+│       ├── TodoDetail
+│       │   └── hooks
+│       └── Todos
+│           ├── TodoForm
+│           │   └── hooks
+│           └── TodoList
+├── constants
+├── pages
+│   ├── auth
+│   │   ├── login
+│   │   └── signup
+│   ├── home
+│   └── todos
+├── providers
+│   └── auth
+├── services
+│   ├── api
+│   ├── auth
+│   └── todos
+├── types
+└── utils
+    └── hooks
 ```
 
-## hook
+# 고민한 점
 
-변경 전 useFetch
+## 어떻게 관심사를 분리할 것인가?
 
-```typescript
-// url, config로 axios.get에 넣어줬음
-// data<T>를 받는데에는 문제없지만 한 화면에서 refetch가 안되어서 refetch 상태를 만들고 true면 한 번 더 fetch 하는 형식으로 구현했음
-// 따라서, 한 데이터를 refetch 하려면 해당 hook의 setRefetch를 사용해야 해서 구조가 복잡해짐
-const useFetch = <T>(url: string, config: {}) => {
-  const [data, setData] = useState<T>();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [reFetch, setReFetch] = useState(false);
+- 기존에는 컴포넌트 내부에서 form과 같은 사용자 로직과 api를 호출하고 처리하는 로직이 동시에 작성되어 난잡하고 어디서 어떤 흐름으로 데이터가 흘러가는지 추적하기 힘듦
+- react-query를 도입하고 컴포넌트 내부에서 작성하던 api와 관련된 서비스 로직들을 react-query에서 가져가고 필요한 동작들만 내부에서 작성하게 됨으로써, 관심사를 분리할 수 있게 됨
+- 하지만 비즈니스 로직과 사용자 로직에서만 관심사의 분리가 필요한 것이 아니라 각각의 로직에서도 관심사의 분리가 필요함
+- 어느 부분까지 관심사를 분리할 것인지 기준이 명확히 정의되어야 함
+- 이것은 경험이 쌓이면 자연스럽게 터득할 것으로 기대됨
 
-  useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-        setIsError(false);
+## 테스트가 꼭 필요한 것인가?
 
-        const {
-          data: { data },
-        }: { data: { data: T } } = await axios.get(url, config);
+- 초기에 코드 퀄리티와 상관없이 요구사항에 대한 기능을 동작가능하게만 구현한 후 마무리 했었음
+- 이후, 코드 퀄리티를 향상 시키기 위해 리팩토링을 진행함
+- 여러번 리팩토링을 진행할 때, 기존 기능의 작동 여부를 확인하는 작업이 반복 됨
+- 따라서, e2e 테스트(cypress)를 활용하여 자동으로 기존 동작에 오류가 없는 지, 확인하고 리팩토링을 수행할 수 있게 됨
+- 단위 테스트, 통합 테스트 등은 아직 필요성을 느끼지 못하여 도입하지 않음
 
-        setData(data);
-      } catch (error) {
-        setIsError(true);
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-        setReFetch(false);
-      }
-    })();
-  }, [url, reFetch]);
+## 폴더 구조를 어떻게 잡아야 할까?
 
-  return { data, isLoading, isError, setReFetch };
-};
+- 기존에도 page, const, component, hook 등으로 폴더를 동일하게 구성했지만, 막상 해당 폴더에 들어가면 마구잡이 식으로 폴더 내부가 작성되어 있었음
+- 따라서 폴더에 대한 명확한 기준과 폴더 내부에 작성할 파일들의 공통 규칙이 필요함을 느꼈음
+- components를 common과 views로 분리하고 기존 hooks로 관리하던 hook에는 공통으로 사용가능한 hook들을 배치하고 component에서 사용하는 custom hook들은 각 component 폴더 내부로 옮겨 최대한 가깝게 배치하였음
 
-export default useFetch;
-```
+## UI가 비슷하다고 해서 컴포넌트는 재사용 하는 것이 맞는가?
 
-변경 후 useFetch -> useQuery ~~react-query 보고 이름 바꿈~~
+- 로그인 / 회원가입 페이지는 로그인, 회원가입 form만 보여주고 box하단에 각 페이지를 link하는 텍스트만 존재함
+- 기존에는 비슷한 UI를 사용하기에 하나의 AuthForm을 통해 views를 type으로 분기하여 로그인 / 회원가입 페이지를 구성하였음
+- 하지만 회원가입에는 비밀번호 확인, 사용자에게 조건 등을 알려주는 공지와 같이 로그인 페이지와는 다른 요구사항이 생겼음
+- 계속해서 분기 처리 된 코드로 유지할 수 있지만, UI가 같다고 해서 같은 컴포넌트를 재사용하는 것이 아니라는 결론을 내림
+- 따라서, LoginForm / SignupForm으로 AuthForm을 분리시켰음
+- 로그인 페이지와 회원가입 페이지에 대한 요구사항이 많지 않고 변경이 많지 않을 수도 있지만 분리하여 관리하면 좋을 것이라고 판단함
 
-```typescript
-// onSuccess와 onError, onFinally를 받아서 외부에서 작성 할 수 있게 함
-interface Options<T> {
-  onSuccess?: (data: T) => void;
-  onError?: (error: unknown) => void;
-  onFinally?: () => void;
-}
+# 한계점 및 개선 사항
 
-// useEffect에 적으니 뭔가 맘에 안들어서 따로 뺌
-// authInstance는 이 Todo App에서는 데이터를 받으려면 필수적이여서 고정시킴
-// authInstance: baseUrl, token 없으면 에러내는 interceptors 적용
-const getData = async <T>(url: string) => {
-  return await authInstance.get<T>(url);
-};
+## window.alert과 confirm을 사용함
 
-// refetch 문제는 useReducer, useContext로 해결하기로 함
-const useQuery = <T>(
-  url: string,
-  { onSuccess, onError, onFinally }: Options<T> = {} // 구조분해 할당을 위해 값 대입
-) => {
-  const [data, setData] = useState<T>();
-  const [isError, setisError] = useState(false);
+- 브라우저의 작동을 멈추고 사용자의 응답을 받기에 사용성에 좋지 않음
+- 따라서, 커스텀 alert과 confirm을 구현할 예정임
 
-  useEffect(() => {
-    getData<T>(url)
-      .then(({ data }) => {
-        setData(data);
-        onSuccess?.(data);
-      })
-      .catch((error) => {
-        console.error(error);
-        setisError(true);
-        onError?.(error);
-      })
-      .finally(() => {
-        onFinally?.();
-      });
-  }, []);
+## 배포가 되어있지 않음
 
-  return {
-    data,
-    isLoading: !isError && !data,
-    isError,
-  };
-};
+- client는 배포가 가능하나 server 배포에 대해 알아보고 추후 배포 예정임
 
-export default useQuery;
-```
+## git과 github를 적절히 사용하지 않음
 
-사용 방식
-
-```typescript
-// TodoList.tsx
-const TodoList = () => {
-  const { todos } = useTodosState(); // provider로 받은 todos
-  const dispatch = useTodosDispatch(); // provider로 받은 dispatch
-  const { isLoading, isError } = useQuery<TodosResponse>(API_PATH.TODO, {
-    onSuccess: ({ data: todos }) => {
-      dispatch({ type: "SET_TODOS", payload: { todos } });
-    }, // todos 데이터를 성공적으로 받으면 dispatch 실행
-  });
-};
-```
-
-useMutation
-기존 useCreateTodo, useUpdateTodo ... 등을 만들다가 아무리 생각해도 이건 적절한 방법이 아닌 것 같아서 만들어 봄
-
-```typescript
-type Method = "POST" | "PUT" | "DELETE"; // post, put, delete 만 사용
-
-interface mutateParams<T> {
-  // useQuery와 마찬가지로 onSuccess시 반환 타입을 받아서 줌
-  url: string;
-  method: Lowercase<Method>;
-  body?: unknown;
-  onSuccess?: (data: T) => void;
-  onError?: (error: unknown) => void;
-  onFinally?: () => void;
-}
-
-const useMutation = (instance?: AxiosInstance) => {
-  // token이 없어도 되는 경우(login..)에도 사용할 수 있게 instance를 받아서 사용함
-  const _instance = instance || axios.create();
-
-  const mutate = async <T>({
-    url,
-    method,
-    body,
-    onSuccess,
-    onError,
-    onFinally,
-  }: mutateParams<T>) => {
-    try {
-      const { data } = await _instance<T>({
-        method,
-        data: body,
-        url,
-      });
-      onSuccess?.(data);
-    } catch (error) {
-      console.error(error);
-      onError?.(error);
-    } finally {
-      onFinally?.();
-    }
-  };
-
-  return { mutate };
-};
-
-export default useMutation;
-```
-
-사용 방식
-
-```typescript
-// TodoList.tsx
-const TodoList = () => {
-  // ...
-
-  const onClickDeleteTodo = (id: string) => async () => {
-    if (!confirm("정말 삭제하시겠습니까?")) {
-      return;
-    }
-
-    mutate({
-      url: join(API_PATH.TODO, "/", id),
-      method: "delete",
-      onSuccess: () => {
-        // 성공 시, 무엇을 할지만 작성
-        dispatch({ type: "DELETE_TODO", payload: { id } });
-        navigate(PAGE_PATH.HOME, { replace: true });
-      },
-    });
-  };
-
-  // ...
-};
-```
-
-변경 전 useInput, useInputWithValid
-
-```typescript
-const useInput = (initValue: string) => {
-  const [value, setValue] = useState(initValue);
-  const onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    setValue(value);
-  };
-
-  useEffect(() => {
-    setValue(initValue);
-  }, [initValue]);
-
-  return { value, onChange, setValue };
-};
-
-export default useInput;
-```
-
-```typescript
-const useInputWithValid = (initValue: string, type: ValueType) => {
-  const [value, setValue] = useState(initValue);
-  const [isValidValue, setIsValidValue] = useState(false);
-
-  const onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    setValue(value);
-    setIsValidValue(isValid(value, type));
-  };
-
-  return { value, onChange, isValid: isValidValue };
-};
-
-export default useInputWithValid;
-```
-
-변경 후 useInput
-
-```typescript
-// useInputWithValid를 제거하고 isValid로 선택적으로 검증함
-interface Props {
-  initValue?: string;
-  isValid?: (value: string) => boolean; // 값을 인자로 받아서 처리 함
-}
-
-const useInput = ({ initValue = "", isValid }: Props = {}) => {
-  const [value, setValue] = useState(initValue);
-  const onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    setValue(value);
-  };
-
-  useEffect(() => {
-    setValue(initValue);
-  }, [initValue]);
-
-  // 해당 return은 좀 더 고민을 해봐야 될 것 같음
-  // props와 others로 나눈 이유는 input element에 ...연산자로 바로 넣기 위해서임
-  return {
-    props: { value, onChange },
-    others: { setValue, isValid: isValid?.(value) }, //isValid를 내부 값으로 처리 후 return
-  };
-};
-
-export default useInput;
-```
-
-사용 방식
-
-```typescript
-// SignupForm.tsx
-const SignupForm = () => {
-  const {
-    others: { isValid: isValidPassword },
-    props: passwordProps,
-  } = useInput({
-    isValid: (value) => REGEXP.PASSWORD.test(value),
-  });
-  const {
-    others: { isValid: isValidPasswordCheck },
-    props: passwordCheckProps,
-  } = useInput({
-    isValid: (value) => passwordProps.value === value,
-  });
-
-  // ...
-  return (
-    // ...
-        <Form.Notice>
-          {!isValidPasswordCheck && passwordCheckProps.value !== ""
-            ? "비밀번호를 확인해주세요."
-            : ""}
-        </Form.Notice>
-        <Form.Button
-          type="submit"
-          disabled={!isValidEmail || !isValidPassword || !isValidPasswordCheck}
-        >
-          회원가입
-        </Form.Button>
-        // ...
-  )
-
-  export default SignupForm;
-};
-```
-
-## components
-
-변경 전 AuthFormBox.tsx, AuthForm.tsx (로그인, 회원가입 컴포넌트)
-
-```typescript
-// AuthFormBox.tsx
-
-interface Props {
-  type: "LOGIN" | "SIGNUP";
-}
-
-const AuthFormBox = ({ type }: Props) => {
-  const { text, value, link } = AUTH_FORM_BOX_LINK_FOR_TYPE[type]; // 상수들을 한 곳에 박아놨음
-
-  // 도대체 뭘 의미하는지 모르겠는 코드
-  return (
-    <div className={styles.box}>
-      <AuthForm type={type} />
-      <CenterBox>
-        <span>{text}</span>
-        <Link to={link}>{value}</Link>
-      </CenterBox>
-    </div>
-  );
-};
-
-export default AuthFormBox;
-```
-
-```typescript
-// AuthForm.tsx
-
-// AuthFormBox에서 type을 받아서 login, signup form을 만듦
-const AuthForm = ({ type }: Props) => {
-  const navigate = useNavigate();
-  const {
-    value: email,
-    onChange: onChangeEmail,
-    isValid: isValidEmail,
-  } = useInputWithValid("", "EMAIL"); // "EMAIL" 타입을 주면 내부에서 검증해서 보내 줌 -> 외부에서는 컨트롤 불가
-  const {
-    value: password,
-    onChange: onChangePassword,
-    isValid: isValidPassword,
-  } = useInputWithValid("", "PASSWORD"); // 마찬가지
-
-  // 로그인 또는 회원가입 정보를 서버에 제출하는 함수
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    // 괜히 복잡해 보이고 난잡한 코드
-    try {
-      const body = {
-        email,
-        password,
-      };
-      const {
-        data: { token },
-      }: {
-        [key: string]: unknown;
-        data: AuthResponse;
-      } = await axios.post(AUTH_TYPE[type].api, body);
-      localStorage.setItem("token", token);
-      navigate(PAGE_PATH.HOME);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 409) {
-          alert(error.response.data.details);
-          return;
-        }
-        if (error.response?.status === 400) {
-          alert(error.response.data.details);
-          return;
-        }
-      }
-      console.error(error);
-    }
-  };
-
-  // 이미 token이 있다면 home으로
-  useEffect(() => {
-    if (getLocalStorageItem("token")) {
-      navigate(PAGE_PATH.HOME);
-    }
-  }, []);
-
-  return (
-    <>
-      <form className={styles.form} onSubmit={onSubmit}>
-        <div className={styles.inputBox}>
-          <label>이메일</label>
-          <input
-            type="email"
-            value={email}
-            onChange={onChangeEmail}
-            placeholder="최소 '@', '.'를 포함해야 합니다"
-          />
-        </div>
-        <div className={styles.inputBox}>
-          <label>비밀번호</label>
-          <input
-            type="password"
-            value={password}
-            onChange={onChangePassword}
-            placeholder="비밀번호는 8자 이상입니다"
-          />
-        </div>
-        <button
-          className={styles.button}
-          type="submit"
-          disabled={!(isValidEmail && isValidPassword)}
-        >
-          {AUTH_TYPE[type].text}
-        </button>
-      </form>
-    </>
-  );
-};
-
-export default AuthForm;
-```
-
-변경 후 AuthForm -> LoginForm, SignupForm 분리, AuthFormBox 제거
-
-```typescript
-// SignupForm.tsx
-
-// 분리의 이유: 만약 회원가입 form에만 추가해야하는 input이 있다면? 을 상상해봤더니 어질어질해서 바로 분리했음
-const SignupForm = () => {
-  const navigate = useNavigate();
-  const {
-    others: { isValid: isValidEmail },
-    props: emailProps,
-  } = useInput({
-    isValid: (value) => REGEXP.EMAIL.test(value), // isValid 체크를 외부에서 결정함
-  });
-  const {
-    others: { isValid: isValidPassword },
-    props: passwordProps,
-  } = useInput({
-    isValid: (value) => REGEXP.PASSWORD.test(value),
-  });
-  const {
-    others: { isValid: isValidPasswordCheck },
-    props: passwordCheckProps,
-  } = useInput({
-    isValid: (value) => passwordProps.value === value, // 리팩토링 한 useInput 덕분에 꼭 정규식이 아니어도 isValid 확인 가능
-  });
-  const { mutate } = useMutation(); // 토큰이 필요없어서 기본 axios.instance 사용
-
-  // 회원가입 정보를 서버에 제출하는 함수
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    mutate<AuthResponse>({
-      url: API_URL.SIGNUP, // 어디에
-      method: "post", // 어떤 동작을
-      body: {
-        // 어떤 정보를
-        email: emailProps.value,
-        password: passwordProps.value,
-      },
-      // 성공하면
-      onSuccess: ({ token }) => {
-        setAuthToken(token); // 토큰 저장
-        navigate(PAGE_PATH.HOME); // home으로 이동
-      },
-      // 실패하면
-      onError: (error) => {
-        if (!(error instanceof AxiosError)) {
-          console.error(error);
-          return;
-        }
-        switch (error.response?.status) {
-          // 미리 알고 있는 error code 처리
-          case 409:
-          case 400:
-            alert(error.response.data.details);
-            break;
-          default:
-            console.error(error);
-        }
-      },
-    });
-  };
-
-  // return문에서 notice 조건 처리가 어지러워서 객체로 처리
-  const isShowNotice = {
-    email: !isValidEmail && emailProps.value !== "",
-    password: !isValidPassword && passwordProps.value !== "",
-    passwordCheck: !isValidPasswordCheck && passwordCheckProps.value !== "",
-  };
-
-  // 토큰이 있다면 home으로
-  useEffect(() => {
-    if (getAuthToken()) {
-      navigate(PAGE_PATH.HOME);
-    }
-  }, []);
-
-  // 각 input별 notice 추가
-  return (
-    <div className="flex flex-col justify-center items-center w-full max-w-[20rem] h-auto p-8 border rounded-lg gap-4 shadow-xl">
-      <Form onSubmit={onSubmit}>
-        <Form.Input type="email" label="이메일" {...emailProps} />
-        <Form.Notice>
-          {isShowNotice.email ? "이메일 형식에 맞춰주세요." : ""}
-        </Form.Notice>
-        <Form.Input type="password" label="비밀번호" {...passwordProps} />
-        <Form.Notice>
-          {isShowNotice.password ? "비밀번호는 8자 이상입니다." : ""}
-        </Form.Notice>
-        <Form.Input
-          type="password"
-          label="비밀번호 확인"
-          {...passwordCheckProps}
-        />
-        <Form.Notice>
-          {isShowNotice.passwordCheck ? "비밀번호를 확인해주세요." : ""}
-        </Form.Notice>
-        <Form.Button
-          type="submit"
-          disabled={!isValidEmail || !isValidPassword || !isValidPasswordCheck}
-        >
-          회원가입
-        </Form.Button>
-      </Form>
-      <span>이미 가입하셨나요?</span>
-      <Link to={PAGE_PATH.LOGIN}>로그인</Link>
-    </div>
-  );
-};
-
-export default SignupForm;
-```
-
-SignupForm과 비슷하지만 분명히 다른 UI와 로직
-
-```typescript
-// LoginForm.tsx
-
-const LoginForm = () => {
-  const navigate = useNavigate();
-  const { props: emailProps } = useInput(); // 로그인은 입력 값 검증을 하지 않음
-  const { props: passwordProps } = useInput();
-  const { mutate } = useMutation();
-
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    mutate<AuthResponse>({
-      url: API_URL.LOGIN,
-      method: "post",
-      body: {
-        email: emailProps.value,
-        password: passwordProps.value,
-      },
-      onSuccess: ({ token }) => {
-        setAuthToken(token);
-        navigate(PAGE_PATH.HOME);
-      },
-      onError: (error) => {
-        if (!(error instanceof AxiosError)) {
-          console.error(error);
-          return;
-        }
-        switch (error.response?.status) {
-          case 409:
-          case 400:
-            alert(error.response.data.details);
-            break;
-          default:
-            console.error(error);
-        }
-      },
-    });
-  };
-
-  useEffect(() => {
-    if (getAuthToken()) {
-      navigate(PAGE_PATH.HOME);
-    }
-  }, []);
-
-  return (
-    <div className="flex flex-col justify-center items-center w-full max-w-[20rem] h-auto p-8 border rounded-lg gap-4 shadow-xl">
-      <Form onSubmit={onSubmit}>
-        <Form.Input type="email" label="이메일" {...emailProps} />
-        <Form.Input type="password" label="비밀번호" {...passwordProps} />
-        <Form.Button type="submit">로그인</Form.Button>
-      </Form>
-      <span>처음이신가요?</span>
-      <Link to={PAGE_PATH.SIGNUP}>회원가입</Link>
-    </div>
-  );
-};
-
-export default LoginForm;
-```
-
-</details>
-
-<details>
-<summary>🪓 2회차 리팩토링</summary>
-
-## 폴더구조
-
-```shell
-└── src
-    ├── components
-    │    ├── common -> 특정 view에 종속되지 않는 UI 컴포넌트
-    │    │   └── hooks -> 컴포넌트에 필요한 hooks
-    │    └── views -> 특정 view에 적용되는 컴포넌트
-    │        └── [view]
-    │            ├── hooks
-    │            └── [component] -> view 컴포넌트에 필요한 컴포넌트
-    ├── constants -> 공통 상수(ex. token)
-    ├── pages
-    │    └── [page] -> view를 불러오고 배치하는 페이지 단위
-    │        ├── index.tsx
-    │        └── [dynamic].tsx -> 동적 라우트 페이지
-    ├── provider -> 공유하고자 하는 상태 provider들
-    ├── services -> 서비스 관련
-    │    ├── @api -> instance 생성 관련
-    │    └── [service]
-    │        └── index.ts -> 서비스의 api 호출 정의
-    ├── types
-    │    ├── common.ts -> 공통 타입
-    │    └── [service].ts -> 서비스 별 타입
-    └── util
-        ├── hooks
-        │    └── index.ts -> 유틸리티 훅
-        └── [util].ts -> 유틸리티 함수
-
-```
-
-## React-Query 적용
-
-기존 상태 동기화를 위해 useReducer, contextApi를 활용한 전역 상태 관리
-
-```typescript
-// fetch한 데이터를 dispatch로 적용
-const { todos } = useTodosState();
-const dispatch = useTodosDispatch();
-const { isLoading, isError } = useQuery<Response<Todo[]>>({
-  queryFn: getTodos,
-  onSuccess: ({ data: todos }) => {
-    dispatch({ type: "SET_TODOS", payload: { todos } });
-  },
-});
-
-// 삭제, 수정한 데이터들을 dispatch로 적용
-const { mutate } = useMutation({
-  mutationFn: (id: string) => deleteTodo(id),
-  onSuccess: (_, id) => {
-    dispatch({ type: "DELETE_TODO", payload: { id } });
-    navigate(PAGE_PATH.HOME, { replace: true });
-  },
-});
-
-const { mutate } = useMutation({
-  mutationFn: (params: UpdateTodoParams) => updateTodo(params),
-  onSuccess: ({ data: todo }) => {
-    dispatch({ type: "UPDATE_TODO", payload: { todo } });
-  },
-  onFinally: () => {
-    setIsEdit(false);
-  },
-});
-```
-
-변경 후
-
-```typescript
-const {
-  data: todo,
-  isLoading,
-  isError,
-} = useQuery(CACHE_KEY.todo(id), () => getTodoById(id));
-
-const { mutate } = useMutation({
-  mutationFn: (id: string) => deleteTodo(id),
-});
-```
-
-## Suspense, Error Boundary 적용
-
-기존 react-query 로딩, 에러 상태 처리
-
-```typescript
-// react-query 호출 컴포넌트 내부
-const {
-  data: todo,
-  isLoading,
-  isError,
-} = useQuery(CACHE_KEY.todo(id), () => getTodoById(id));
-
-if (isLoading) {
-  return <div>로딩중...</div>;
-}
-
-if (isError) {
-  return (
-    <>
-      <div>유효하지 않은 Todo입니다.</div>
-      <button onClick={onClickMoveHome}>메인으로 가기</button>
-    </>
-  );
-}
-
-return (
-  // ...
-)
-```
-
-변경 후
-
-```typescript
-const TodoDetail = () => {
-  // useSuspendedQuery hook은 toss/useSuspendedQuery를 참고함
-  // https://slash.page/libraries/react/react-query/src/hooks/usesuspendedquery.i18n/
-  const { data: todo } = useSuspendedQuery(CACHE_KEY.todo(id), () => getTodoById(id)
-
-  return (
-    // ...
-  )
-}
-
-
-// SuspenseErrorBoundary로 감싸주기
-const TodoDetailContainer = () => {
-  return (
-    <SuspenseErrorBoundary>
-      <TodoDetail />
-    </SuspenseErrorBoundary>
-  );
-};
-```
-
-</details>
+- pr과 commit, issue 등을 적절히 사용하면 project의 history를 한 눈에 확인할 수 있음
+- 하지만 익숙하지 않아 제대로 활용하지 않음
+- 추후, 계속해서 사용해봄으로써 보완할 예정
