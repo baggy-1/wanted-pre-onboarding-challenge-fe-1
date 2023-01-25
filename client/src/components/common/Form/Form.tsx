@@ -1,17 +1,18 @@
 import React from "react";
 
+type RequiredProps<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+
 interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
   children: React.ReactNode;
   onSubmit: React.FormEventHandler<HTMLFormElement>;
 }
 
 interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "placeholder"> {
-  label: string;
-  value: string;
-  name: string;
-  type: React.InputHTMLAttributes<HTMLInputElement>["type"];
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  extends RequiredProps<
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, "placeholder">,
+    "name" | "type" | "onChange"
+  > {
+  label?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
 }
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
