@@ -3,31 +3,78 @@ import { PAGE_PATH } from "@/constants";
 import Form from "@/components/common/Form";
 import { getTodoById } from "@/services/todos";
 import { CACHE_KEY } from "@/services/cacheKeys";
-import useTodoDetail from "./hooks/useTodoDetail";
 import useSuspendedQuery from "@/utils/hooks/useSuspendedQuery";
 import SuspenseErrorBoundary from "@/components/common/SuspenseErrorBoundary";
+import useInput from "@/utils/hooks/useInput";
+import { useState } from "react";
+import Dialog from "@/components/common/Dialog";
+import useDialog from "@/components/common/Dialog/hooks";
+import useTodoMutation from "@/services/todos/hooks/useTodoMutation";
 
 const TodoDetail = () => {
   const params = useParams();
   const id = params.id || "";
   const navigate = useNavigate();
+  const [isEdit, setIsEdit] = useState(false);
   const { data: todo } = useSuspendedQuery(CACHE_KEY.todo(id), () =>
     getTodoById(id)
   );
+  const { updateMutate, deleteMutate } = useTodoMutation();
+  const {
+    others: { setValue: setTitle },
+    props: titleProps,
+  } = useInput({ initValue: todo.title });
+  const {
+    others: { setValue: setContent },
+    props: contentProps,
+  } = useInput({ initValue: todo.content });
+  const { isOpen: isOpenUpdateDialog, handleToggle: toggleUpdateDialog } =
+    useDialog();
+  const { isOpen: isOpenDeleteDialog, handleToggle: toggleDeleteDialog } =
+    useDialog();
 
-  const onClickMoveHome = () => {
+  const onClickDeleteTodo = () => {
+    deleteMutate(todo.id);
     navigate(PAGE_PATH.HOME, { replace: true });
   };
 
-  const {
-    isEdit,
-    titleProps,
-    contentProps,
-    onClickDeleteTodo,
-    onSubmitTodoEdit,
-    onClickCancelEdit,
-    onClickToggleEdit,
-  } = useTodoDetail(todo);
+  const isUpdateInputValues = () => {
+    return (
+      titleProps.value !== todo.title || contentProps.value !== todo.content
+    );
+  };
+
+  const onClickUpdateTodo = () => {
+    if (!isUpdateInputValues()) {
+      // Todo: toast로 변경
+      alert("변경된 내용이 없습니다.");
+      return;
+    }
+
+    updateMutate({
+      id: todo.id,
+      title: titleProps.value,
+      content: contentProps.value,
+    });
+    setIsEdit(false);
+    toggleUpdateDialog();
+  };
+
+  const setPrevTodoValues = () => {
+    const { title, content } = todo;
+    setTitle(title);
+    setContent(content);
+  };
+
+  const onClickCancelUpdate = () => {
+    setPrevTodoValues();
+    setIsEdit(false);
+    toggleUpdateDialog();
+  };
+
+  const onClickCancelDelete = () => {
+    toggleDeleteDialog();
+  };
 
   return (
     <div className="relative flex flex-col items-center justify-start w-full h-full">
@@ -36,14 +83,11 @@ const TodoDetail = () => {
       </div>
       <button
         className="absolute top-0 right-0 p-2 text-2xl font-bold text-red-500"
-        onClick={onClickMoveHome}
+        onClick={() => navigate(PAGE_PATH.HOME, { replace: true })}
       >
         ❌
       </button>
-      <Form
-        className="flex flex-col items-center justify-start w-full h-full gap-8 p-4 border-t-2"
-        onSubmit={onSubmitTodoEdit}
-      >
+      <form className="flex flex-col items-center justify-start w-full h-full gap-8 p-4 border-t-2">
         <div className="flex items-center justify-center w-full h-auto gap-4">
           <Form.Label className="text-xl font-bold">제목</Form.Label>
           <Form.Input
@@ -71,13 +115,14 @@ const TodoDetail = () => {
             <Form.Button
               className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
               type="button"
-              onClick={onClickCancelEdit}
+              onClick={onClickCancelUpdate}
             >
               취소
             </Form.Button>
             <Form.Button
               className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
-              type="submit"
+              type="button"
+              onClick={toggleUpdateDialog}
             >
               저장
             </Form.Button>
@@ -87,20 +132,44 @@ const TodoDetail = () => {
             <Form.Button
               className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
               type="button"
-              onClick={onClickToggleEdit}
+              onClick={() => setIsEdit(true)}
             >
               수정
             </Form.Button>
             <Form.Button
               className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
               type="button"
-              onClick={onClickDeleteTodo(id)}
+              onClick={toggleDeleteDialog}
             >
               삭제
             </Form.Button>
           </div>
         )}
-      </Form>
+      </form>
+
+      <Dialog isOpen={isOpenUpdateDialog} onClose={onClickCancelUpdate}>
+        <Dialog.Title>정말 수정하시겠습니까?</Dialog.Title>
+        <Dialog.Content>수정을 원하시면 수정을 눌러주세요.</Dialog.Content>
+        <Dialog.Actions>
+          <button onClick={onClickCancelUpdate}>취소</button>
+          <button onClick={onClickUpdateTodo}>수정</button>
+        </Dialog.Actions>
+      </Dialog>
+
+      <Dialog isOpen={isOpenDeleteDialog} onClose={onClickCancelDelete}>
+        <Dialog.Title>정말 삭제하시겠습니까?</Dialog.Title>
+        <Dialog.Content>
+          삭제를 진행하면 Todo 기록이 삭제되고 <br />
+          복구할 수 없습니다.
+          <br />
+          <br />
+          삭제를 원하시면 삭제를 눌러주세요.
+        </Dialog.Content>
+        <Dialog.Actions>
+          <button onClick={onClickCancelDelete}>취소</button>
+          <button onClick={onClickDeleteTodo}>삭제</button>
+        </Dialog.Actions>
+      </Dialog>
     </div>
   );
 };
