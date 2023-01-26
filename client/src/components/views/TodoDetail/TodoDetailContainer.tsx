@@ -28,8 +28,11 @@ const TodoDetail = () => {
     others: { setValue: setContent },
     props: contentProps,
   } = useInput({ initValue: todo.content });
-  const { isOpen: isOpenUpdateDialog, handleToggle: toggleUpdateDialog } =
-    useDialog();
+  const {
+    isOpen: isOpenUpdateDialog,
+    handleToggle: toggleUpdateDialog,
+    handleClose: handleUpdateDialogClose,
+  } = useDialog();
   const { isOpen: isOpenDeleteDialog, handleToggle: toggleDeleteDialog } =
     useDialog();
 
@@ -69,7 +72,7 @@ const TodoDetail = () => {
   const onClickCancelUpdate = () => {
     setPrevTodoValues();
     setIsEdit(false);
-    toggleUpdateDialog();
+    handleUpdateDialogClose();
   };
 
   const onClickCancelDelete = () => {
@@ -151,8 +154,12 @@ const TodoDetail = () => {
         <Dialog.Title>정말 수정하시겠습니까?</Dialog.Title>
         <Dialog.Content>수정을 원하시면 수정을 눌러주세요.</Dialog.Content>
         <Dialog.Actions>
-          <button onClick={onClickCancelUpdate}>취소</button>
-          <button onClick={onClickUpdateTodo}>수정</button>
+          <button onClick={onClickCancelUpdate} data-testid="update-cancel">
+            취소
+          </button>
+          <button onClick={onClickUpdateTodo} data-testid="update-submit">
+            수정
+          </button>
         </Dialog.Actions>
       </Dialog>
 
@@ -166,8 +173,12 @@ const TodoDetail = () => {
           삭제를 원하시면 삭제를 눌러주세요.
         </Dialog.Content>
         <Dialog.Actions>
-          <button onClick={onClickCancelDelete}>취소</button>
-          <button onClick={onClickDeleteTodo}>삭제</button>
+          <button onClick={onClickCancelDelete} data-testid="delete-cancel">
+            취소
+          </button>
+          <button onClick={onClickDeleteTodo} data-testid="delete-submit">
+            삭제
+          </button>
         </Dialog.Actions>
       </Dialog>
     </div>
