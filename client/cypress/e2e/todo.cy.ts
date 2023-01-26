@@ -1,9 +1,23 @@
 import { joinBaseUrl } from "cypress/support/utils";
 
 const createActions = (title: string, content: string) => {
-  cy.get("input[name=title]").type(title);
-  cy.get("input[name=content]").type(content);
-  cy.get("button[type=submit]")
+  const createTitleContent = () => {
+    cy.get("input[name=title]").clear().type(title);
+    cy.get("input[name=content]").clear().type(content);
+  };
+
+  const createDialogOpen = () => {
+    createTitleContent();
+    cy.get("button").contains("Todo 추가").click();
+  };
+
+  createDialogOpen();
+  cy.get("div[data-testid=backdrop]").click("right", { force: true });
+  createDialogOpen();
+  cy.get("button[data-testid=create-cancel]").click();
+  createDialogOpen();
+
+  cy.get("button[data-testid=create-submit]")
     .click()
     .then(() => cy.wait("@postTodos"))
     .then(() => cy.wait("@getTodos"))
