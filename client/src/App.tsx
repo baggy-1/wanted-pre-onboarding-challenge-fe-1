@@ -7,6 +7,7 @@ import SignupPage from "@/pages/auth/signup";
 import Layout from "@/components/common/Layout";
 import { AuthProvider, withAuth, withUnAuth } from "@/providers/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "@/components/common/Toast";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      <ToastContainer />
     </QueryClientProvider>
   );
 }

@@ -126,8 +126,6 @@ describe("Todo 로직 테스트", () => {
       .children()
       .each((_) => todoListLength++)
       .then(() => {
-        console.log(todoListLength);
-
         cy.reload();
 
         cy.get("div")
