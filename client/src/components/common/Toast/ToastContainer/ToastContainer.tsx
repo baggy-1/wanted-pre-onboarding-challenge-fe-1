@@ -1,4 +1,4 @@
-import Toast from "../Toast";
+import ToastInner from "../ToastInner";
 import useToastContainer from "./hooks/useToastContainer";
 
 const ToastContainer = () => {
@@ -14,9 +14,9 @@ const ToastContainer = () => {
           >
             {toastList.map(({ content, props }) => {
               return (
-                <Toast {...props} key={props.toastId}>
+                <ToastInner {...props} key={props.toastId}>
                   {content}
-                </Toast>
+                </ToastInner>
               );
             })}
           </div>
