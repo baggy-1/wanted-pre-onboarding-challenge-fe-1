@@ -1,5 +1,84 @@
 import { joinBaseUrl } from "cypress/support/utils";
 
+const createActions = (title: string, content: string) => {
+  const createTitleContent = () => {
+    cy.get("input[name=title]").clear().type(title);
+    cy.get("input[name=content]").clear().type(content);
+  };
+
+  const createDialogOpen = () => {
+    createTitleContent();
+    cy.get("button").contains("Todo 추가").click();
+  };
+
+  createDialogOpen();
+  cy.get("div[data-testid=backdrop]").click("right", { force: true });
+  createDialogOpen();
+  cy.get("button[data-testid=create-cancel]").click();
+  createDialogOpen();
+
+  cy.get("button[data-testid=create-submit]")
+    .click()
+    .then(() => cy.wait("@postTodos"))
+    .then(() => cy.wait("@getTodos"))
+    .then(() => cy.get("div").contains(title).should("exist"))
+    .then(() => cy.get("div").contains(title).click());
+};
+
+const updateActions = (title: string, content: string) => {
+  const updateTitleContent = () => {
+    cy.get("input[name=updateTitle]").clear().type(title);
+    cy.get("input[name=updateContent]").clear().type(content);
+  };
+  const updateDialogOpen = () => {
+    cy.get("button").contains("수정").click();
+    updateTitleContent();
+    cy.get("button[type=button]").contains("저장").click();
+  };
+
+  // update dialog cancel
+  updateDialogOpen();
+  cy.get("div[data-testid=backdrop]").click("right", { force: true });
+  updateDialogOpen();
+  cy.get("button[data-testid=update-cancel]").click();
+  updateDialogOpen();
+
+  // update submit
+  cy.get("button[data-testid=update-submit]")
+    .click()
+    .then(() => cy.wait("@putTodos"))
+    .then(() => cy.wait("@getTodos"))
+    .then(() => cy.get("div").contains(title).should("exist"));
+};
+
+const deleteActions = (title: string) => {
+  const deleteDialogOpen = () => {
+    cy.get("button").contains("삭제").click();
+  };
+
+  // delete dialog cancel
+  deleteDialogOpen();
+  cy.get("div[data-testid=backdrop]").click("right", { force: true });
+  deleteDialogOpen();
+  cy.get("button[data-testid=delete-cancel]").click();
+  cy.get("button").contains("삭제").click();
+
+  // delete submit
+  cy.get("button[data-testid=delete-submit]")
+    .click()
+    .then(() => cy.wait("@deleteTodos"))
+    .then(() => cy.url().should("eq", joinBaseUrl("/")))
+    .then(() => cy.wait("@getTodos"))
+    .then(() => cy.get("div").contains(title).should("not.exist"));
+};
+
+const todosIntercept = () => {
+  cy.intercept("GET", "/todos").as("getTodos");
+  cy.intercept("POST", "/todos").as("postTodos");
+  cy.intercept("PUT", "/todos/*").as("putTodos");
+  cy.intercept("DELETE", "/todos/*").as("deleteTodos");
+};
+
 describe("Todo 로직 테스트", () => {
   beforeEach(() => {
     cy.visit("/", {
@@ -10,129 +89,87 @@ describe("Todo 로직 테스트", () => {
   });
 
   it("Todo CRUD", () => {
-    cy.intercept("GET", "/todos").as("getTodos");
-    cy.intercept("POST", "/todos").as("postTodos");
-    cy.intercept("PUT", "/todos/*").as("putTodos");
-    cy.intercept("DELETE", "/todos/*").as("deleteTodos");
+    todosIntercept();
+
+    const random = Math.random().toString(36).substring(2, 15);
+    const randomTitle = `테스트 작성하기${random}`;
+    const randomContent = `멋진 테스트 작성하기${random}`;
+    const randomUpdateTitle = `테스트 업데이트${random}`;
+    const randomUpdateContent = `멋진 테스트 업데이트${random}`;
 
     // create
-    cy.get("input[name=title]").type("테스트 작성하기");
-    cy.get("input[name=content]").type("멋진 테스트 작성하기");
-    cy.get("button[type=submit]")
-      .click()
-      .then(() => cy.wait("@postTodos"))
-      .then(() => cy.wait("@getTodos"))
-      .then(() => cy.get("div").contains("테스트 작성하기").should("exist"))
-      .then(() => cy.get("div").contains("테스트 작성하기").click());
+    createActions(randomTitle, randomContent);
 
     // update
-    cy.get("button").contains("수정").click();
-    cy.get("input[name=updateTitle]").clear().type("테스트 업데이트");
-    cy.get("input[name=updateContent]").clear().type("멋진 테스트 업데이트");
-    cy.get("button[type=submit]")
-      .contains("저장")
-      .click()
-      .then(() => cy.wait("@putTodos"))
-      .then(() => cy.wait("@getTodos"))
-      .then(() => cy.get("div").contains("테스트 업데이트").should("exist"));
+    updateActions(randomUpdateTitle, randomUpdateContent);
 
     // delete
-    cy.get("button")
-      .contains("삭제")
-      .click()
-      .then(() => cy.wait("@deleteTodos"))
-      .then(() => cy.url().should("eq", joinBaseUrl("/")))
-      .then(() => cy.wait("@getTodos"))
-      .then(() =>
-        cy.get("div").contains("테스트 업데이트").should("not.exist")
-      );
+    deleteActions(randomUpdateTitle);
   });
 
   it("새로고침 시, 데이터 정합성 테스트", () => {
-    cy.intercept("GET", "/todos").as("getTodos");
-    cy.intercept("POST", "/todos").as("postTodos");
-    cy.intercept("PUT", "/todos/*").as("putTodos");
-    cy.intercept("DELETE", "/todos/*").as("deleteTodos");
+    todosIntercept();
+
+    const random = Math.random().toString(36).substring(2, 15);
+    const randomTitle = `새로고침 테스트 작성하기${random}`;
+    const randomContent = `새로고침 멋진 테스트 작성하기${random}`;
+    const randomUpdateTitle = `새로고침 테스트 업데이트${random}`;
+    const randomUpdateContent = `새로고침 멋진 테스트 업데이트${random}`;
 
     // read
+    cy.visit("/");
+
+    let todoListLength = 0;
     cy.get("div")
       .contains("Todo 목록")
       .next()
       .children()
-      .should("have.length", 4);
+      .each((_) => todoListLength++)
+      .then(() => {
+        cy.reload();
 
-    cy.reload();
+        cy.get("div")
+          .contains("Todo 목록")
+          .next()
+          .children()
+          .should("have.length", todoListLength);
 
-    cy.get("div")
-      .contains("Todo 목록")
-      .next()
-      .children()
-      .should("have.length", 4);
+        // create
+        createActions(randomTitle, randomContent);
 
-    // create
-    cy.get("input[name=title]").type("새로고침 테스트 작성하기");
-    cy.get("input[name=content]").type("멋진 새로고침 테스트 작성하기");
-    cy.get("button[type=submit]")
-      .click()
-      .then(() => cy.wait("@postTodos"))
-      .then(() => cy.wait("@getTodos"))
-      .then(() =>
-        cy.get("div").contains("새로고침 테스트 작성하기").should("exist")
-      )
-      .then(() => cy.get("div").contains("새로고침 테스트 작성하기").click());
+        cy.reload();
 
-    cy.reload();
+        cy.get("div")
+          .contains("Todo 목록")
+          .next()
+          .children()
+          .should("have.length", todoListLength + 1);
+        cy.get("div").contains(randomTitle).should("exist");
 
-    cy.get("div")
-      .contains("Todo 목록")
-      .next()
-      .children()
-      .should("have.length", 5);
-    cy.get("div").contains("새로고침 테스트 작성하기").should("exist");
+        // update
+        updateActions(randomUpdateTitle, randomUpdateContent);
 
-    // update
-    cy.get("button").contains("수정").click();
-    cy.get("input[name=updateTitle]").clear().type("새로고침 테스트 업데이트");
-    cy.get("input[name=updateContent]")
-      .clear()
-      .type("멋진 새로고침 테스트 업데이트");
-    cy.get("button[type=submit]")
-      .contains("저장")
-      .click()
-      .then(() => cy.wait("@putTodos"))
-      .then(() => cy.wait("@getTodos"))
-      .then(() =>
-        cy.get("div").contains("새로고침 테스트 업데이트").should("exist")
-      );
+        cy.reload();
 
-    cy.reload();
+        cy.get("div")
+          .contains("Todo 목록")
+          .next()
+          .children()
+          .should("have.length", todoListLength + 1);
+        cy.get("div").contains(randomUpdateTitle).should("exist");
 
-    cy.get("div")
-      .contains("Todo 목록")
-      .next()
-      .children()
-      .should("have.length", 5);
-    cy.get("div").contains("새로고침 테스트 업데이트").should("exist");
+        // delete
+        deleteActions(randomUpdateTitle);
 
-    // delete
-    cy.get("button")
-      .contains("삭제")
-      .click()
-      .then(() => cy.wait("@deleteTodos"))
-      .then(() => cy.url().should("eq", joinBaseUrl("/")))
-      .then(() => cy.wait("@getTodos"))
-      .then(() =>
-        cy.get("div").contains("새로고침 테스트 업데이트").should("not.exist")
-      );
+        cy.reload();
 
-    cy.reload();
-
-    cy.get("div")
-      .contains("Todo 목록")
-      .next()
-      .children()
-      .should("have.length", 4);
-    cy.get("div").contains("새로고침 테스트 업데이트").should("not.exist");
+        cy.get("div")
+          .contains("Todo 목록")
+          .next()
+          .children()
+          .should("have.length", todoListLength);
+        cy.get("div").contains(randomUpdateTitle).should("not.exist");
+      });
   });
 });
 

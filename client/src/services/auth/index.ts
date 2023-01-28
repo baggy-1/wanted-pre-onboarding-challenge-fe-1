@@ -22,8 +22,7 @@ export const handleAuthError = (error: unknown) => {
   switch (error.response?.status) {
     case 409:
     case 400:
-      alert(error.response.data.details);
-      return;
+      throw new Error(error.response.data.details);
     default:
       console.error(error);
   }

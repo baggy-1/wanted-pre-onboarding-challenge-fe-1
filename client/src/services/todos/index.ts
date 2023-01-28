@@ -13,7 +13,7 @@ export const getTodoById = (id: string) => {
   return api.get<null, Todo>(join(API_PATH.TODO, "/", id));
 };
 
-export const addTodo = (params: TodoParmas) => {
+export const createTodo = (params: TodoParmas) => {
   const api = createApi();
   return api.post<null, Todo>(API_PATH.TODO, params);
 };

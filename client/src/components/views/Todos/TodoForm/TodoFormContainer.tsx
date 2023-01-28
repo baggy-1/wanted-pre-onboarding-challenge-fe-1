@@ -1,13 +1,56 @@
+import Dialog from "@/components/common/Dialog";
+import useDialog from "@/components/common/Dialog/hooks/useDialog";
 import Form from "@/components/common/Form";
-import useTodoForm from "./hooks/useTodoForm";
+import { toast } from "@/components/common/Toast";
+import useTodoMutation from "@/services/todos/hooks/useTodoMutation";
+import useInput from "@/utils/hooks/useInput";
+import { FormEvent, useState } from "react";
 
 const TodoFormContainer = () => {
-  const { titleProps, contentProps, onSubmit } = useTodoForm();
+  const {
+    others: { setValue: setTitle },
+    props: titleProps,
+  } = useInput();
+  const {
+    others: { setValue: setContent },
+    props: contentProps,
+  } = useInput();
+  const { createMutate } = useTodoMutation();
+  const { isOpen, handleToggle } = useDialog();
+
+  const clearInput = () => {
+    setTitle("");
+    setContent("");
+  };
+
+  const isSomeEmpty = (...values: string[]) => {
+    return values.some((value) => value === "");
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isSomeEmpty(titleProps.value, contentProps.value)) {
+      toast("제목과 내용을 모두 입력해주세요.", { type: "warning" });
+      return;
+    }
+
+    handleToggle();
+  };
+
+  const onClickCreateTodo = () => {
+    createMutate({
+      title: titleProps.value,
+      content: contentProps.value,
+    });
+    clearInput();
+    handleToggle();
+  };
 
   return (
-    <Form
+    <form
       className="flex flex-col items-center justify-center w-full h-full"
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
       <div className="flex items-center justify-center w-full gap-4">
         <div className="flex flex-col w-full max-w-lg gap-4">
@@ -31,7 +74,24 @@ const TodoFormContainer = () => {
           Todo 추가
         </Form.Button>
       </div>
-    </Form>
+      <Dialog isOpen={isOpen} onClose={handleToggle}>
+        <Dialog.Title>정말 추가하시겠습니까?</Dialog.Title>
+        <Dialog.Content>Todo를 추가하려면 추가를 눌러주세요.</Dialog.Content>
+        <Dialog.Actions>
+          <Dialog.Button data-testid="create-cancel" onClick={handleToggle}>
+            취소
+          </Dialog.Button>
+          <button
+            data-testid="create-submit"
+            type="button"
+            onClick={onClickCreateTodo}
+            autoFocus
+          >
+            추가
+          </button>
+        </Dialog.Actions>
+      </Dialog>
+    </form>
   );
 };
 
