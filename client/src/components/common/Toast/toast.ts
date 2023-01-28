@@ -17,7 +17,7 @@ const mergeOptions = (type: TypeOptions, options?: Partial<Options>) => {
     ...options,
     type: options?.type || type,
     toastId: getToastId(options),
-    position: options?.position || "bottom-left",
+    position: options?.position || "top-right",
   };
 };
 

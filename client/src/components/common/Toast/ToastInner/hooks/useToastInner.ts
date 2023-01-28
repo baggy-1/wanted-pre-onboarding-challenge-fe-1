@@ -15,7 +15,7 @@ const useToastInner = ({ closeToast }: ToastProps) => {
       node.removeEventListener("animationend", onClosed);
     };
 
-    node.classList.add("animate-fade-out-left");
+    node.classList.add("animate-fade-out-top-right");
     node.addEventListener("animationend", onClosed);
   };
 
@@ -26,12 +26,12 @@ const useToastInner = ({ closeToast }: ToastProps) => {
     }
 
     const onEntered = () => {
-      node.classList.remove("animate-fade-in-left");
+      node.classList.remove("animate-fade-in-top-right");
       node.removeEventListener("animationend", onEntered);
     };
 
     const onEnter = () => {
-      node.classList.add("animate-fade-in-left");
+      node.classList.add("animate-fade-in-top-right");
       node.addEventListener("animationend", onEntered);
     };
 

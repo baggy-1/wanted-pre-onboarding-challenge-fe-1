@@ -9,34 +9,11 @@ import {
   ToastProps,
 } from "../../types";
 import eventManager from "../../utils/eventManager";
-
-const getIcon = (options: Options) => {
-  const { type } = options;
-  switch (type) {
-    case "success":
-      return "성공";
-    case "error":
-      return "에러";
-    case "info":
-      return "정보";
-    case "warning":
-      return "경고";
-    default:
-      return "기본";
-  }
-};
+import { getIcon } from "../utils";
 
 const useToastContainer = () => {
   const [_, setToastIds] = useState<ToastId[]>([]);
   const toastToRender = useRef(new Map<ToastId, ToastInfo>()).current;
-
-  useEffect(() => {
-    eventManager.on(Event.show, buildToast);
-
-    return () => {
-      toastToRender.clear();
-    };
-  }, []);
 
   const removeToast = (toastId: ToastId) => {
     toastToRender.delete(toastId);
@@ -86,6 +63,14 @@ const useToastContainer = () => {
       callback(position, toast)
     );
   };
+
+  useEffect(() => {
+    eventManager.on(Event.show, buildToast);
+
+    return () => {
+      toastToRender.clear();
+    };
+  }, []);
 
   return {
     getToastToRender,
