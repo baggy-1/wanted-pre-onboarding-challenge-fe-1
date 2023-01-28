@@ -3,6 +3,7 @@ import Backdrop from "@/components/common/Backdrop";
 import DialogTitle from "./DialogTitle";
 import DialogContent from "./DialogContent";
 import DialogActions from "./DialogActions";
+import DialogButton from "./DialogButton";
 
 interface Props {
   isOpen: boolean;
@@ -27,6 +28,7 @@ const Dialog = Object.assign(DialogRoot, {
   Title: DialogTitle,
   Content: DialogContent,
   Actions: DialogActions,
+  Button: DialogButton,
 });
 
 export default Dialog;

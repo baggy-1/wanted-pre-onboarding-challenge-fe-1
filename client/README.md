@@ -197,7 +197,10 @@ src
 
 # 한계점 및 개선 사항
 
-## window.alert과 confirm을 사용함
+## ~~window.alert과 confirm을 사용함~~
+
+> alert -> react-toastify를 참고하여 `ToastContainer`와 `toast`를 구현하여 해결
+> confirm -> mui의 dialog를 참고하여 `Dialog` 구현하여 해결
 
 - 브라우저의 작동을 멈추고 사용자의 응답을 받기에 사용성에 좋지 않음
 - 따라서, 커스텀 alert과 confirm을 구현할 예정임

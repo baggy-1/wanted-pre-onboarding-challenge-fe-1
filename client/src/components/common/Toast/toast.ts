@@ -8,19 +8,20 @@ const generateToastId = () => {
   return `${TOAST_ID++}`;
 };
 
-const getToastId = (options?: Options) => {
+const getToastId = (options?: Partial<Options>) => {
   return options?.toastId || generateToastId();
 };
 
-const mergeOptions = (type: TypeOptions, options?: Options) => {
+const mergeOptions = (type: TypeOptions, options?: Partial<Options>) => {
   return {
     ...options,
     type: options?.type || type,
     toastId: getToastId(options),
+    position: options?.position || "bottom-left",
   };
 };
 
-const toast = (content: Content, options?: Options) => {
+const toast = (content: Content, options?: Partial<Options>) => {
   eventManager.emit(Event.show, content, mergeOptions(Type.DEFAULT, options));
 };
 

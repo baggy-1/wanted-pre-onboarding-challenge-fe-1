@@ -10,6 +10,7 @@ import { useState } from "react";
 import Dialog from "@/components/common/Dialog";
 import useDialog from "@/components/common/Dialog/hooks";
 import useTodoMutation from "@/services/todos/hooks/useTodoMutation";
+import { toast } from "@/components/common/Toast";
 
 const TodoDetail = () => {
   const params = useParams();
@@ -37,8 +38,12 @@ const TodoDetail = () => {
     useDialog();
 
   const onClickDeleteTodo = () => {
-    deleteMutate(todo.id);
-    navigate(PAGE_PATH.HOME, { replace: true });
+    deleteMutate(todo.id, {
+      onSuccess: () => {
+        toast("삭제되었습니다.", { type: "success" });
+        navigate(PAGE_PATH.HOME, { replace: true });
+      },
+    });
   };
 
   const isUpdateInputValues = () => {
@@ -47,18 +52,29 @@ const TodoDetail = () => {
     );
   };
 
-  const onClickUpdateTodo = () => {
+  const handleUpdateDialog = () => {
     if (!isUpdateInputValues()) {
       // Todo: toast로 변경
-      alert("변경된 내용이 없습니다.");
+      toast("변경된 내용이 없습니다.", { type: "warning" });
       return;
     }
+    toggleUpdateDialog();
+  };
 
-    updateMutate({
-      id: todo.id,
-      title: titleProps.value,
-      content: contentProps.value,
-    });
+  const onClickUpdateTodo = () => {
+    updateMutate(
+      {
+        id: todo.id,
+        title: titleProps.value,
+        content: contentProps.value,
+      },
+      {
+        onSuccess: () => {
+          toast("수정되었습니다.", { type: "success" });
+        },
+      }
+    );
+
     setIsEdit(false);
     toggleUpdateDialog();
   };
@@ -125,7 +141,7 @@ const TodoDetail = () => {
             <Form.Button
               className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
               type="button"
-              onClick={toggleUpdateDialog}
+              onClick={handleUpdateDialog}
             >
               저장
             </Form.Button>
@@ -154,10 +170,17 @@ const TodoDetail = () => {
         <Dialog.Title>정말 수정하시겠습니까?</Dialog.Title>
         <Dialog.Content>수정을 원하시면 수정을 눌러주세요.</Dialog.Content>
         <Dialog.Actions>
-          <button onClick={onClickCancelUpdate} data-testid="update-cancel">
+          <Dialog.Button
+            onClick={onClickCancelUpdate}
+            data-testid="update-cancel"
+          >
             취소
-          </button>
-          <button onClick={onClickUpdateTodo} data-testid="update-submit">
+          </Dialog.Button>
+          <button
+            onClick={onClickUpdateTodo}
+            data-testid="update-submit"
+            autoFocus
+          >
             수정
           </button>
         </Dialog.Actions>
@@ -173,10 +196,17 @@ const TodoDetail = () => {
           삭제를 원하시면 삭제를 눌러주세요.
         </Dialog.Content>
         <Dialog.Actions>
-          <button onClick={onClickCancelDelete} data-testid="delete-cancel">
+          <Dialog.Button
+            onClick={onClickCancelDelete}
+            data-testid="delete-cancel"
+          >
             취소
-          </button>
-          <button onClick={onClickDeleteTodo} data-testid="delete-submit">
+          </Dialog.Button>
+          <button
+            onClick={onClickDeleteTodo}
+            data-testid="delete-submit"
+            autoFocus
+          >
             삭제
           </button>
         </Dialog.Actions>

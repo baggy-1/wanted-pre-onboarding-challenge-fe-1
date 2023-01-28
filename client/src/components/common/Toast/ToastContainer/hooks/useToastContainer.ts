@@ -27,7 +27,7 @@ const getIcon = (options: Options) => {
 };
 
 const useToastContainer = () => {
-  const [toastIds, setToastIds] = useState<ToastId[]>([]);
+  const [_, setToastIds] = useState<ToastId[]>([]);
   const toastToRender = useRef(new Map<ToastId, ToastInfo>()).current;
 
   useEffect(() => {

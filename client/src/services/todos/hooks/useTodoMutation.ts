@@ -18,8 +18,9 @@ const useTodoMutation = () => {
   const { mutate: updateMutate } = useMutation(
     (params: UpdateTodoParams) => updateTodo(params),
     {
-      onSuccess: () => {
+      onSuccess: ({ id }) => {
         client.invalidateQueries(CACHE_KEY.todos);
+        client.invalidateQueries(CACHE_KEY.todo(id));
       },
     }
   );
