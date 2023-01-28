@@ -38,6 +38,40 @@ module.exports = {
             transform: `translate3d(-3000px, 0, 0)`,
           },
         },
+        "fade-in-top-right": {
+          from: {
+            opacity: 0,
+            transform: `translate3d(3000px, 0, 0)`,
+          },
+          "60%": {
+            opacity: 1,
+            transform: `translate3d(-25px, 0, 0)`,
+          },
+          "75%": {
+            transform: `translate3d(10px, 0, 0)`,
+          },
+          "90%": {
+            transform: `translate3d(-5px, 0, 0)`,
+          },
+          to: {
+            transform: `none`,
+          },
+        },
+        "fade-out-top-right": {
+          from: {
+            transform: `none`,
+          },
+          "30%": {
+            transform: `translate3d(-25px, 0, 0)`,
+          },
+          "75%": {
+            opacity: 1,
+          },
+          to: {
+            opacity: 0,
+            transform: `translate3d(3000px, 0, 0)`,
+          },
+        },
         "progress-bar": {
           from: {
             transform: "scaleX(1)",
@@ -50,6 +84,8 @@ module.exports = {
       animation: {
         "fade-in-left": "fade-in-left 0.5s ease-out forwards",
         "fade-out-left": "fade-out-left 0.5s ease-out forwards",
+        "fade-in-top-right": "fade-in-top-right 0.5s ease-out forwards",
+        "fade-out-top-right": "fade-out-top-right 0.5s ease-out forwards",
         "progress-bar": "progress-bar 3s linear forwards",
       },
     },

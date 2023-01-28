@@ -5,7 +5,7 @@ const ToastContainer = () => {
   const { getToastToRender } = useToastContainer();
 
   return (
-    <div className="fixed bottom-[1rem] left-[1rem] w-auto h-auto flex flex-col items-end justify-center">
+    <div className="fixed top-[1rem] right-[1rem] w-auto h-auto flex flex-col items-end justify-center z-[999]">
       {getToastToRender((position, toastList) => {
         return (
           <div
