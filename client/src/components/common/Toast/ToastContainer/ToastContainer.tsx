@@ -1,15 +1,18 @@
 import ToastInner from "../ToastInner";
 import useToastContainer from "./hooks/useToastContainer";
+import { getPositionClassName } from "./utils";
 
 const ToastContainer = () => {
   const { getToastToRender } = useToastContainer();
 
   return (
-    <div className="fixed top-[1rem] right-[1rem] w-auto h-auto flex flex-col items-end justify-center z-[999]">
+    <div className="w-auto h-auto flex flex-col items-end justify-center">
       {getToastToRender((position, toastList) => {
         return (
           <div
-            className={`flex flex-col gap-4 ${position}`}
+            className={`fixed flex flex-col gap-4 ${getPositionClassName(
+              position
+            )} z-[999]`}
             key={`c${position}`}
           >
             {toastList.map(({ content, props }) => {
