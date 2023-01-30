@@ -4,12 +4,9 @@ import DialogTitle from "./DialogTitle";
 import DialogContent from "./DialogContent";
 import DialogActions from "./DialogActions";
 import DialogButton from "./DialogButton";
+import type { DialogProps } from "./types";
 
-interface Props {
-  isOpen: boolean;
-  onClose: (...args: unknown[]) => void;
-  children: React.ReactNode;
-}
+type Props = DialogProps & React.PropsWithChildren;
 
 const DialogContainer = ({ children, onClose }: Omit<Props, "isOpen">) => {
   return (
