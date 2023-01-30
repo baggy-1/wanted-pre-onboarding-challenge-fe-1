@@ -34,6 +34,7 @@
     "@vitejs/plugin-react": "^3.0.0",
     "autoprefixer": "^10.4.13",
     "babel-loader": "^8.3.0",
+    "chromatic": "^6.15.0",
     "cypress": "^12.3.0",
     "eslint-plugin-cypress": "^2.12.1",
     "postcss": "^8.4.21",
