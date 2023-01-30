@@ -1,7 +1,7 @@
 import { AuthParmas, AuthResponse } from "@/types/auth";
 import { API_PATH } from "@/constants";
-import api from "@/services/api";
 import { AxiosError } from "axios";
+import api from "@/services/api";
 
 export const userLogin = (params: AuthParmas) => {
   return api.post<null, AuthResponse>(API_PATH.LOGIN, params);
