@@ -3,7 +3,7 @@ import { getAuthToken } from "@/utils";
 import axios from "axios";
 import { handleAuthError } from "@/services/auth";
 
-export const createApi = () => {
+const createApi = () => {
   const token = getAuthToken();
 
   const _api = axios.create({
@@ -11,6 +11,18 @@ export const createApi = () => {
     headers: {
       ...(token && { Authorization: token }),
     },
+  });
+
+  _api.interceptors.request.use((config) => {
+    const token = getAuthToken();
+
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        ...(token && { Authorization: token }),
+      },
+    };
   });
 
   _api.interceptors.response.use((response) => {
