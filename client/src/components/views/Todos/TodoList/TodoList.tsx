@@ -3,10 +3,13 @@ import { getTodos } from "@/services/todos";
 import { CACHE_KEY } from "@/services/cacheKeys";
 import useSuspendedQuery from "@/utils/hooks/useSuspendedQuery";
 import SuspenseErrorBoundary from "@/components/common/SuspenseErrorBoundary";
+import type { Todo } from "@/types/todos";
 
-const TodoList = () => {
-  const { data: todos } = useSuspendedQuery(CACHE_KEY.todos, getTodos);
+interface Props {
+  todos: Todo[];
+}
 
+export const TodoList = ({ todos }: Props) => {
   return (
     <div className="w-full h-full overflow-hidden">
       <div className="w-full h-18 p-4 text-2xl font-bold text-center border-b-[3px]">
@@ -25,10 +28,16 @@ const TodoList = () => {
   );
 };
 
+const TodoListContainer = () => {
+  const { data: todos } = useSuspendedQuery(CACHE_KEY.todos, getTodos);
+
+  return <TodoList todos={todos} />;
+};
+
 const TodoListSuspense = () => {
   return (
     <SuspenseErrorBoundary>
-      <TodoList />
+      <TodoListContainer />
     </SuspenseErrorBoundary>
   );
 };

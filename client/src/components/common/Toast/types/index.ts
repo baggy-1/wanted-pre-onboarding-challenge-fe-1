@@ -1,3 +1,5 @@
+import React from "react";
+
 export type Position =
   | "top-left"
   | "top-center"
@@ -20,7 +22,7 @@ export type ToastId = string;
 
 export interface ToastProps extends Options {
   closeToast: () => void;
-  iconOut: string;
+  iconOut: React.ReactNode;
 }
 
 export interface ToastInfo {

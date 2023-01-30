@@ -1,6 +1,5 @@
 import { Options } from "../types";
 
-// Todo: 구현이 완료되면 타입 변경
 type ToastEvent = "show";
 type ShowCallback = (content: string, options: Options) => void;
 type Callback = ShowCallback;

@@ -54,7 +54,6 @@ const TodoDetail = () => {
 
   const handleUpdateDialog = () => {
     if (!isUpdateInputValues()) {
-      // Todo: toast로 변경
       toast("변경된 내용이 없습니다.", { type: "warning" });
       return;
     }

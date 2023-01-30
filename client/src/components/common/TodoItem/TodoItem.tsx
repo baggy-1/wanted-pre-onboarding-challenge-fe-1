@@ -2,7 +2,6 @@ import { PAGE_PATH } from "@/constants";
 import { Todo } from "@/types/todos";
 import { join } from "@/utils";
 import { useNavigate } from "react-router-dom";
-import { toast } from "@/components/common/Toast";
 
 interface Props {
   item: Todo;
