@@ -11,15 +11,16 @@ import Dialog from "@/components/common/Dialog";
 import useDialog from "@/components/common/Dialog/hooks";
 import useTodoMutation from "@/services/todos/hooks/useTodoMutation";
 import { toast } from "@/components/common/Toast";
+import type { Todo } from "@/types/todos";
+import Header from "./Header";
 
-const TodoDetail = () => {
-  const params = useParams();
-  const id = params.id || "";
+interface Props {
+  todo: Todo;
+}
+
+const TodoDetail = ({ todo }: Props) => {
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
-  const { data: todo } = useSuspendedQuery(CACHE_KEY.todo(id), () =>
-    getTodoById(id)
-  );
   const { updateMutate, deleteMutate } = useTodoMutation();
   const {
     others: { setValue: setTitle },
@@ -95,16 +96,7 @@ const TodoDetail = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-start w-full h-full">
-      <div className="w-full h-auto p-4 text-2xl font-bold text-center border-b-2">
-        Todo 상세
-      </div>
-      <button
-        className="absolute top-0 right-0 p-2 text-2xl font-bold text-red-500"
-        onClick={() => navigate(PAGE_PATH.HOME, { replace: true })}
-      >
-        ❌
-      </button>
+    <>
       <form className="flex flex-col items-center justify-start w-full h-full gap-8 p-4 border-t-2">
         <div className="flex items-center justify-center w-full h-auto gap-4">
           <Form.Label className="text-xl font-bold">제목</Form.Label>
@@ -188,7 +180,8 @@ const TodoDetail = () => {
       <Dialog isOpen={isOpenDeleteDialog} onClose={onClickCancelDelete}>
         <Dialog.Title>정말 삭제하시겠습니까?</Dialog.Title>
         <Dialog.Content>
-          삭제를 진행하면 Todo 기록이 삭제되고 <br />
+          삭제를 진행하면 Todo 기록이 삭제되고
+          <br />
           복구할 수 없습니다.
           <br />
           <br />
@@ -210,16 +203,35 @@ const TodoDetail = () => {
           </button>
         </Dialog.Actions>
       </Dialog>
+    </>
+  );
+};
+
+export const TodoDetailContainer = () => {
+  const params = useParams();
+  const id = params.id || "";
+  const navigate = useNavigate();
+  const { data: todo } = useSuspendedQuery(CACHE_KEY.todo(id), () =>
+    getTodoById(id)
+  );
+
+  return (
+    <div className="relative flex flex-col items-center justify-start w-full h-full">
+      <Header
+        title="Todo 상세"
+        onClose={() => navigate(PAGE_PATH.HOME, { replace: true })}
+      />
+      <TodoDetail todo={todo} />
     </div>
   );
 };
 
-const TodoDetailContainer = () => {
+const TodoDetailContainerSuspense = () => {
   return (
     <SuspenseErrorBoundary>
-      <TodoDetail />
+      <TodoDetailContainer />
     </SuspenseErrorBoundary>
   );
 };
 
-export default TodoDetailContainer;
+export default TodoDetailContainerSuspense;
