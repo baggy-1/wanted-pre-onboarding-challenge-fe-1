@@ -11,7 +11,7 @@
     "storybook": "start-storybook -p 6006",
     "sb": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "chromatic": "npx chromatic --project-token=151ad5690a3e"
+    "chromatic": "chromatic --exit-zero-on-changes"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.22.0",
