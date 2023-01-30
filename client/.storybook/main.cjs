@@ -1,3 +1,6 @@
+const { mergeConfig, loadConfigFromFile } = require("vite");
+const path = require("path");
+
 module.exports = {
   stories: [
     "../src/**/*.stories.mdx",
@@ -15,5 +18,16 @@ module.exports = {
   },
   features: {
     storyStoreV7: true,
+  },
+  async viteFinal(config) {
+    const {
+      config: { resolve },
+    } = await loadConfigFromFile(path.resolve(__dirname, "../vite.config.ts"));
+
+    return mergeConfig(config, {
+      // err_unknown_file_extension
+      // resolve: (await import("../vite.config.ts")).default.resolve,
+      resolve,
+    });
   },
 };
