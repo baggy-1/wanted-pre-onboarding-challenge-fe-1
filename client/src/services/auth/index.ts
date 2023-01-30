@@ -1,4 +1,4 @@
-import { AuthParmas, AuthResponse } from "@/types/auth";
+import type { AuthParmas, AuthResponse } from "@/types/auth";
 import { API_PATH } from "@/constants";
 import { AxiosError } from "axios";
 import api from "@/services/api";

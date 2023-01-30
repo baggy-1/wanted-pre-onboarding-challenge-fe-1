@@ -5,7 +5,7 @@ import { setAuthToken } from "@/utils";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/providers/auth";
 import { handleAuthError, userSignUp } from "@/services/auth";
-import { AuthParmas } from "@/types/auth";
+import type { AuthParmas } from "@/types/auth";
 import { useMutation } from "@tanstack/react-query";
 
 const SignUpContainer = () => {

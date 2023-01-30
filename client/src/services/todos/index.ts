@@ -1,6 +1,6 @@
 import { API_PATH } from "@/constants";
 import api from "@/services/api";
-import { Todo, TodoParmas, UpdateTodoParams } from "@/types/todos";
+import type { Todo, TodoParmas, UpdateTodoParams } from "@/types/todos";
 import { join } from "@/utils";
 
 export const getTodos = () => {
