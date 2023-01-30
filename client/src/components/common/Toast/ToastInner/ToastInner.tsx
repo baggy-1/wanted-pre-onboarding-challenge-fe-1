@@ -7,7 +7,6 @@ interface Props extends ToastProps {
 }
 
 const ToastInner = ({ children, ...props }: Props) => {
-  // Todo: type에 따라 다른 스타일 적용 & icon
   const { type, iconOut } = props;
   const { toastRef, handleCloseToast } = useToastInner(props);
 

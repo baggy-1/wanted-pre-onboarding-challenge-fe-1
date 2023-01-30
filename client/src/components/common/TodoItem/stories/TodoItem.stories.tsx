@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import TodoItem from "../TodoItem";
 
 export default {
-  title: "TodoItem/TodoItem",
+  title: "Todo/TodoItem",
   component: TodoItem,
   decorators: [
     (Story) => (
