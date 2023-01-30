@@ -31,12 +31,14 @@ const TodoDetail = ({ todo }: Props) => {
     props: contentProps,
   } = useInput({ initValue: todo.content });
   const {
-    isOpen: isOpenUpdateDialog,
-    handleToggle: toggleUpdateDialog,
-    handleClose: handleUpdateDialogClose,
+    handleOpen: openUpdateDialog,
+    handleClose: closeUpdateDialog,
+    getDialogToRender: getUpdateDialogToRender,
   } = useDialog();
-  const { isOpen: isOpenDeleteDialog, handleToggle: toggleDeleteDialog } =
-    useDialog();
+  const {
+    handleOpen: openDeleteDialog,
+    getDialogToRender: getDeleteDialogToRenter,
+  } = useDialog();
 
   const onClickDeleteTodo = () => {
     deleteMutate(todo.id, {
@@ -53,12 +55,12 @@ const TodoDetail = ({ todo }: Props) => {
     );
   };
 
-  const handleUpdateDialog = () => {
+  const onClickUpdateDialogOpen = () => {
     if (!isUpdateInputValues()) {
       toast("변경된 내용이 없습니다.", { type: "warning" });
       return;
     }
-    toggleUpdateDialog();
+    openUpdateDialog();
   };
 
   const onClickUpdateTodo = () => {
@@ -76,7 +78,7 @@ const TodoDetail = ({ todo }: Props) => {
     );
 
     setIsEdit(false);
-    toggleUpdateDialog();
+    closeUpdateDialog();
   };
 
   const setPrevTodoValues = () => {
@@ -88,11 +90,7 @@ const TodoDetail = ({ todo }: Props) => {
   const onClickCancelUpdate = () => {
     setPrevTodoValues();
     setIsEdit(false);
-    handleUpdateDialogClose();
-  };
-
-  const onClickCancelDelete = () => {
-    toggleDeleteDialog();
+    closeUpdateDialog();
   };
 
   return (
@@ -132,7 +130,7 @@ const TodoDetail = ({ todo }: Props) => {
             <Form.Button
               className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
               type="button"
-              onClick={handleUpdateDialog}
+              onClick={onClickUpdateDialogOpen}
             >
               저장
             </Form.Button>
@@ -149,7 +147,7 @@ const TodoDetail = ({ todo }: Props) => {
             <Form.Button
               className="h-12 border rounded-lg w-36 hover:bg-blue-500 hover:text-white"
               type="button"
-              onClick={toggleDeleteDialog}
+              onClick={openDeleteDialog}
             >
               삭제
             </Form.Button>
@@ -157,52 +155,57 @@ const TodoDetail = ({ todo }: Props) => {
         )}
       </form>
 
-      <Dialog isOpen={isOpenUpdateDialog} onClose={onClickCancelUpdate}>
-        <Dialog.Title>정말 수정하시겠습니까?</Dialog.Title>
-        <Dialog.Content>수정을 원하시면 수정을 눌러주세요.</Dialog.Content>
-        <Dialog.Actions>
-          <Dialog.Button
-            onClick={onClickCancelUpdate}
-            data-testid="update-cancel"
-          >
-            취소
-          </Dialog.Button>
-          <button
-            onClick={onClickUpdateTodo}
-            data-testid="update-submit"
-            autoFocus
-          >
-            수정
-          </button>
-        </Dialog.Actions>
-      </Dialog>
+      {getUpdateDialogToRender(({ isOpen }) => {
+        return (
+          <Dialog isOpen={isOpen} onClose={onClickCancelUpdate}>
+            <Dialog.Title>정말 수정하시겠습니까?</Dialog.Title>
+            <Dialog.Content>수정을 원하시면 수정을 눌러주세요.</Dialog.Content>
+            <Dialog.Actions>
+              <Dialog.Button
+                onClick={onClickCancelUpdate}
+                data-testid="update-cancel"
+              >
+                취소
+              </Dialog.Button>
+              <button
+                onClick={onClickUpdateTodo}
+                data-testid="update-submit"
+                autoFocus
+              >
+                수정
+              </button>
+            </Dialog.Actions>
+          </Dialog>
+        );
+      })}
 
-      <Dialog isOpen={isOpenDeleteDialog} onClose={onClickCancelDelete}>
-        <Dialog.Title>정말 삭제하시겠습니까?</Dialog.Title>
-        <Dialog.Content>
-          삭제를 진행하면 Todo 기록이 삭제되고
-          <br />
-          복구할 수 없습니다.
-          <br />
-          <br />
-          삭제를 원하시면 삭제를 눌러주세요.
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Dialog.Button
-            onClick={onClickCancelDelete}
-            data-testid="delete-cancel"
-          >
-            취소
-          </Dialog.Button>
-          <button
-            onClick={onClickDeleteTodo}
-            data-testid="delete-submit"
-            autoFocus
-          >
-            삭제
-          </button>
-        </Dialog.Actions>
-      </Dialog>
+      {getDeleteDialogToRenter(({ isOpen, onClose }) => {
+        return (
+          <Dialog isOpen={isOpen} onClose={onClose}>
+            <Dialog.Title>정말 삭제하시겠습니까?</Dialog.Title>
+            <Dialog.Content>
+              삭제를 진행하면 Todo 기록이 삭제되고
+              <br />
+              복구할 수 없습니다.
+              <br />
+              <br />
+              삭제를 원하시면 삭제를 눌러주세요.
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Dialog.Button onClick={onClose} data-testid="delete-cancel">
+                취소
+              </Dialog.Button>
+              <button
+                onClick={onClickDeleteTodo}
+                data-testid="delete-submit"
+                autoFocus
+              >
+                삭제
+              </button>
+            </Dialog.Actions>
+          </Dialog>
+        );
+      })}
     </>
   );
 };

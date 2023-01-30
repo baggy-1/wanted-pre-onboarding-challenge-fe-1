@@ -1,6 +1,6 @@
 import { CACHE_KEY } from "@/services/cacheKeys";
 import { createTodo, deleteTodo, updateTodo } from "@/services/todos";
-import { TodoParmas, UpdateTodoParams } from "@/types/todos";
+import type { TodoParmas, UpdateTodoParams } from "@/types/todos";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useTodoMutation = () => {

@@ -4,7 +4,7 @@ import Form from "@/components/common/Form";
 import useInput from "@/utils/hooks/useInput";
 import { setAuthToken } from "@/utils";
 import { useAuth } from "@/providers/auth";
-import { AuthParmas } from "@/types/auth";
+import type { AuthParmas } from "@/types/auth";
 import { handleAuthError, userLogin } from "@/services/auth";
 import { useMutation } from "@tanstack/react-query";
 
